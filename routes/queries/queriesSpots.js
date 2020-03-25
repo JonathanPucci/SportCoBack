@@ -1,4 +1,4 @@
-var db = require("./dbconnection").db;
+var db = require("../../dbconnection").db;
 
 // add query functions
 function getAllSpots(req, res, next) {
@@ -35,8 +35,8 @@ function getSingleSpot(req, res, next) {
 function createSpot(req, res, next) {
   db
     .none(
-      'insert into "Spots"("Spot_longitude","Spot_latitude","Fields")' +
-        "values(${Spot_lontitude}, ${Spot_latitude}, ${Fields})",
+      'insert into "Spots"("Spot_longitude","Spot_latitude")' +
+        "values(${Spot_longitude}, ${Spot_latitude})",
       req.body
     )
     .then(function() {
@@ -53,12 +53,11 @@ function createSpot(req, res, next) {
 function updateSpot(req, res, next) {
   db
     .none(
-      'update "Spots" set "Spot_longitude"=$2,"Spot_latitude"=$3,"Fields"=$4 where "Spot_ID"=$1',
+      'update "Spots" set "Spot_longitude"=$2,"Spot_latitude"=$3 where "Spot_ID"=$1',
       [
         req.body.Spot_ID,
         req.body.Spot_longitude,
         req.body.Spot_latitude,
-        req.body.Fields
       ]
     )
     .then(function() {
@@ -73,9 +72,9 @@ function updateSpot(req, res, next) {
 }
 
 function removeSpot(req, res, next) {
-  var spotID = parseInt(req.params.id);
+  var spot = JSON.parse(req.params.spot);
   db
-    .result('delete from "Spots" where "Spot_ID"= $1', spotID)
+    .result('delete from "Spots" where "Spot_ID"= ${Spot_ID}', spot)
     .then(function(result) {
       /* jshint ignore:start */
       res.status(200).json({

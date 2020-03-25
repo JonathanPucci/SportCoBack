@@ -1,4 +1,4 @@
-var db = require("./dbconnection").db;
+var db = require("../../dbconnection").db;
 
 // add query functions
 function getAllUsers(req, res, next) {
@@ -33,9 +33,8 @@ function getSingleUser(req, res, next) {
 }
 
 function createUser(req, res, next) {
-  req.body.age = parseInt(req.body.age);
   db
-    .none('insert into "Users"("User_Name")' + "values(${User_Name})", req.body)
+    .none('insert into "Users"("User_Name") values(${User_Name})', req.body)
     .then(function() {
       res.status(200).json({
         status: "success",
@@ -65,9 +64,10 @@ function updateUser(req, res, next) {
 }
 
 function removeUser(req, res, next) {
-  var userID = parseInt(req.params.id);
+  var user = JSON.parse(req.params.user);
+
   db
-    .result('delete from "Users" where "User_ID"= $1', userID)
+    .result('delete from "Users" where "User_ID"= ${User_ID}', user)
     .then(function(result) {
       /* jshint ignore:start */
       res.status(200).json({

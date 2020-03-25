@@ -1,4 +1,4 @@
-var db = require("./dbconnection").db;
+var db = require("../../dbconnection").db;
 
 // add query functions
 function getAllFieldSpots(req, res, next) {
@@ -51,10 +51,13 @@ function createFieldSpot(req, res, next) {
 }
 
 function removeFieldSpot(req, res, next) {
+  
+  let fieldspot = JSON.parse(req.params.fieldspot);
+
   db
     .result(
-      'delete from "FieldSpots" where "Field"= ${field} AND "Spot_ID"= ${spot_id}',
-      req.params
+      'delete from "FieldSpots" where "Field"= ${Field} AND "Spot_ID"= ${Spot_ID}',
+      fieldspot
     )
     .then(function(result) {
       /* jshint ignore:start */

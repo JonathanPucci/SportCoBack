@@ -1,4 +1,4 @@
-var db = require("./dbconnection").db;
+var db = require("../../dbconnection").db;
 
 // add query functions
 function getAllEvents(req, res, next) {
@@ -33,7 +33,6 @@ function getSingleEvent(req, res, next) {
 }
 
 function createEvent(req, res, next) {
-  req.body.age = parseInt(req.body.age);
   db
     .none(
       'insert into "Events"( "Description", "Photo", "Date", "Host_ID", "Spot_ID", "Participants_min", "Participants_max", "Sport")' +
@@ -69,9 +68,10 @@ function updateEvent(req, res, next) {
 }
 
 function removeEvent(req, res, next) {
-  var eventID = parseInt(req.params.id);
+  var event = JSON.parse(req.params.event);
+
   db
-    .result('delete from "Events" where id = $1', eventID)
+    .result('delete from "Events" where "Event_ID" = ${Event_ID}', event)
     .then(function(result) {
       /* jshint ignore:start */
       res.status(200).json({

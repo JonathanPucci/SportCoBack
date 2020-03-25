@@ -1,4 +1,4 @@
-var db = require("./dbconnection").db;
+var db = require("../../dbconnection").db;
 
 // add query functions
 function getAllEventParticipants(req, res, next) {
@@ -32,6 +32,22 @@ function getParticipantsOfEvent(req, res, next) {
     });
 }
 
+function getEventsOfParticipant(req, res, next) {
+  var User_ID = parseInt(req.params.id);
+  db
+    .one('select * from "EventParticipants" where "User_ID" = $1', User_ID)
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Retrieved events of participant" + User_ID
+      });
+    })
+    .catch(function(err) {
+      return next(err);
+    });
+}
+
 function createEventParticipant(req, res, next) {
   db
     .none(
@@ -51,16 +67,12 @@ function createEventParticipant(req, res, next) {
 }
 
 function removeEventParticipant(req, res, next) {
-  var userid = parseInt(req.params.user_id);
-  var eventid = parseInt(req.params.event_id);
-  var ue = {
-    User_ID: userid,
-    Event_ID: eventid
-  };
+  console.log(JSON.stringify(req.params.eventparticipant))
+  let eventparticipant = JSON.parse(req.params.eventparticipant);
   db
     .result(
       'delete from "EventParticipants" where "User_ID"= ${User_ID} AND "Event_ID"= ${Event_ID}',
-      ue
+      eventparticipant
     )
     .then(function(result) {
       /* jshint ignore:start */
@@ -79,5 +91,6 @@ module.exports = {
   getAllEventParticipants: getAllEventParticipants,
   createEventParticipant: createEventParticipant,
   removeEventParticipant: removeEventParticipant,
-  getParticipantsOfEvent: getParticipantsOfEvent
+  getParticipantsOfEvent: getParticipantsOfEvent,
+  getEventsOfParticipant : getEventsOfParticipant
 };

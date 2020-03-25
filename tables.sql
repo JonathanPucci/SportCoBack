@@ -53,8 +53,8 @@ CREATE TABLE "FieldSpots" (
 
 
 
-ALTER TABLE "Events" ADD CONSTRAINT "Events_fk0" FOREIGN KEY ("Host_ID") REFERENCES "Users"("User_ID");
-ALTER TABLE "Events" ADD CONSTRAINT "Events_fk1" FOREIGN KEY ("Spot_ID") REFERENCES "Spots"("Spot_ID");
-ALTER TABLE "FieldSpots" ADD CONSTRAINT "FieldSpots_fk1" FOREIGN KEY ("Spot_ID") REFERENCES "Spots"("Spot_ID");
-ALTER TABLE "EventParticipants" ADD CONSTRAINT "EventParticipants_fk0" FOREIGN KEY ("Event_ID") REFERENCES "Events"("Event_ID");
-ALTER TABLE "EventParticipants" ADD CONSTRAINT "EventParticipants_fk1" FOREIGN KEY ("User_ID") REFERENCES "Users"("User_ID");
+ALTER TABLE "Events" ADD CONSTRAINT "Events_fk0" FOREIGN KEY ("Host_ID") REFERENCES "Users"("User_ID") ON DELETE CASCADE;
+ALTER TABLE "Events" ADD CONSTRAINT "Events_fk1" FOREIGN KEY ("Spot_ID") REFERENCES "Spots"("Spot_ID") ON DELETE CASCADE;
+ALTER TABLE "FieldSpots" ADD CONSTRAINT "FieldSpots_fk1" FOREIGN KEY ("Spot_ID") REFERENCES "Spots"("Spot_ID") ON DELETE CASCADE;
+ALTER TABLE "EventParticipants" ADD CONSTRAINT "EventParticipants_fk0" FOREIGN KEY ("Event_ID") REFERENCES "Events"("Event_ID") ON DELETE CASCADE;
+ALTER TABLE "EventParticipants" ADD CONSTRAINT "EventParticipants_fk1" FOREIGN KEY ("User_ID") REFERENCES "Users"("User_ID") ON DELETE CASCADE;
