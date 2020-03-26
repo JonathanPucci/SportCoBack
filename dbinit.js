@@ -7,7 +7,7 @@ function createUser(id, name) {
   };
   return db
     .none(
-      'insert into "Users"("User_ID","User_Name")' +
+      'insert into Users(User_ID,User_Name)' +
       "values(${User_ID},${User_Name})",
       user
     )
@@ -26,7 +26,7 @@ function createEventParticipant(eid, uid) {
   };
   return db
     .none(
-      'insert into "EventParticipants"("User_ID","Event_ID")' +
+      'insert into EventParticipants(User_ID,Event_ID)' +
       "values(${User_ID},${Event_ID})",
       ep
     )
@@ -45,7 +45,7 @@ function createFieldSpot(field, spid) {
   };
   return db
     .none(
-      'insert into "FieldSpots"("Spot_ID","Field")' +
+      'insert into FieldSpots(Spot_ID,Field)' +
       "values(${Spot_ID},${Field})",
       fs
     )
@@ -71,7 +71,7 @@ function createEvent(id, des, p, da, hid, spid, pmi, pma, s) {
   };
   return db
     .none(
-      'insert into "Events"("Event_ID", "Description", "Photo", "Date", "Host_ID", "Spot_ID", "Participants_min", "Participants_max", "Sport")' +
+      'insert into Events(Event_ID, Description, Photo, Date, Host_ID, Spot_ID, Participants_min, Participants_max, Sport)' +
       "values(${Event_ID}, ${ Description}, ${ Photo}, ${ Date}, ${ Host_ID}, ${ Spot_ID}, ${ Participants_min}, ${ Participants_max}, ${ Sport})",
       myevent
     )
@@ -92,7 +92,7 @@ function createSpot(id, lla, llo) {
 
   return db
     .none(
-      'insert into "Spots"("Spot_ID","Spot_longitude","Spot_latitude")' +
+      'insert into Spots(Spot_ID,Spot_longitude,Spot_latitude)' +
       "values(${Spot_ID},${Spot_longitude}, ${Spot_latitude})",
       spot
     )
@@ -105,7 +105,7 @@ function createSpot(id, lla, llo) {
 }
 
 db
-  .none('TRUNCATE "Users", "Events", "Spots","EventParticipants" CASCADE')
+  .none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
   .then(() => {
     createUser("1", "Jon").then(() => {
       createUser("2", "Omar").then(() => {

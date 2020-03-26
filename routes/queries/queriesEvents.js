@@ -3,7 +3,24 @@ var db = require("../../dbconnection").db;
 // add query functions
 function getAllEvents(req, res, next) {
   db
-    .any('select * from "Events"')
+    .any('select * from Events')
+    .then(function (data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Retrieved ALL Events"
+      });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getAllEventsInArea(req, res, next) {
+  let area = req.body.area;
+
+  db
+    .any('select * from events INNER JOIN spots ON spots.spot_id = events.spot_id;')
     .then(function (data) {
       res.status(200).json({
         status: "success",
@@ -19,17 +36,16 @@ function getAllEvents(req, res, next) {
 function getSingleEvent(req, res, next) {
   var eventID = parseInt(req.params.id);
   db
-    .one('select * from "Events" where "Event_ID" = $1', eventID)
+    .one('select * from Events where Event_ID = $1', eventID)
     .then(function (eventsData) {
-      console.log(eventsData)
       db
-        .one('select * from "Users" where "User_ID" = $1', eventsData.Host_ID)
+        .one('select * from Users where User_ID = $1', eventsData.host_id)
         .then(function (hostData) {
           db
-            .any('select * from "EventParticipants" where "Event_ID" = $1', eventID)
+            .any('select * from EventParticipants where Event_ID = $1', eventID)
             .then(function (participantsData) {
               db
-                .one('select * from "Spots" where "Spot_ID" = $1', eventsData.Spot_ID)
+                .one('select * from Spots where Spot_ID = $1', eventsData.spot_id)
                 .then(function (spotsData) {
                   res.status(200).json({
                     status: "success",
@@ -53,7 +69,7 @@ function getSingleEvent(req, res, next) {
 function createEvent(req, res, next) {
   db
     .none(
-      'insert into "Events"( "Description", "Photo", "Date", "Host_ID", "Spot_ID", "Participants_min", "Participants_max", "Sport")' +
+      'insert into Events( Description, Photo, Date, Host_ID, Spot_ID, Participants_min, Participants_max, Sport)' +
       "values( ${ Description}, ${ Photo}, ${ Date}, ${ Host_ID}, ${ Spot_ID}, ${ Participants_min}, ${ Participants_max}, ${ Sport})",
       req.body
     )
@@ -71,7 +87,7 @@ function createEvent(req, res, next) {
 function updateEvent(req, res, next) {
   db
     .none(
-      'update "Events" set "Description"=${ Description}, "Photo"=${ Photo}, "Date"=${ Date}, "Host_ID"=${ Host_ID}, "Spot_ID"=${ Spot_ID}, "Participants_min"=${ Participants_min}, "Participants_max"=${ Participants_max}, "Sport"=${ Sport} where "Event_ID"=${Event_ID} ',
+      'update Events set Description=${ Description}, Photo=${ Photo}, Date=${ Date}, Host_ID=${ Host_ID}, Spot_ID=${ Spot_ID}, Participants_min=${ Participants_min}, Participants_max=${ Participants_max}, Sport=${ Sport} where Event_ID=${Event_ID} ',
       req.body
     )
     .then(function () {
@@ -89,7 +105,7 @@ function removeEvent(req, res, next) {
   var event = JSON.parse(req.params.event);
 
   db
-    .result('delete from "Events" where "Event_ID" = ${Event_ID}', event)
+    .result('delete from Events where Event_ID = ${Event_ID}', event)
     .then(function (result) {
       /* jshint ignore:start */
       res.status(200).json({

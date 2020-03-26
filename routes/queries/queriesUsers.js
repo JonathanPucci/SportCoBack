@@ -3,7 +3,7 @@ var db = require("../../dbconnection").db;
 // add query functions
 function getAllUsers(req, res, next) {
   db
-    .any('select * from "Users"')
+    .any('select * from Users')
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -19,7 +19,7 @@ function getAllUsers(req, res, next) {
 function getSingleUser(req, res, next) {
   var eventID = parseInt(req.params.id);
   db
-    .one('select * from "Users" where "User_ID" = $1', eventID)
+    .one('select * from Users where User_ID = $1', eventID)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -34,7 +34,7 @@ function getSingleUser(req, res, next) {
 
 function createUser(req, res, next) {
   db
-    .none('insert into "Users"("User_Name") values(${User_Name})', req.body)
+    .none('insert into Users("User_Name") values(${User_Name})', req.body)
     .then(function() {
       res.status(200).json({
         status: "success",
@@ -48,7 +48,7 @@ function createUser(req, res, next) {
 
 function updateUser(req, res, next) {
   db
-    .none('update "Users" set "User_Name"=$1 where "User_ID"=$2', [
+    .none('update Users set "User_Name"=$1 where User_ID=$2', [
       req.body.User_Name,
       req.body.User_ID
     ])
@@ -67,7 +67,7 @@ function removeUser(req, res, next) {
   var user = JSON.parse(req.params.user);
 
   db
-    .result('delete from "Users" where "User_ID"= ${User_ID}', user)
+    .result('delete from Users where User_ID= ${User_ID}', user)
     .then(function(result) {
       /* jshint ignore:start */
       res.status(200).json({

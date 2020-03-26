@@ -3,7 +3,7 @@ var db = require("../../dbconnection").db;
 // add query functions
 function getAllEventParticipants(req, res, next) {
   db
-    .any('select * from "EventParticipants"')
+    .any('select * from EventParticipants')
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -19,7 +19,7 @@ function getAllEventParticipants(req, res, next) {
 function getParticipantsOfEvent(req, res, next) {
   var eventID = parseInt(req.params.id);
   db
-    .one('select * from "EventParticipants" where "Event_ID" = $1', eventID)
+    .one('select * from EventParticipants where Event_ID = $1', eventID)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -35,7 +35,7 @@ function getParticipantsOfEvent(req, res, next) {
 function getEventsOfParticipant(req, res, next) {
   var User_ID = parseInt(req.params.id);
   db
-    .one('select * from "EventParticipants" where "User_ID" = $1', User_ID)
+    .one('select * from EventParticipants where User_ID = $1', User_ID)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -51,7 +51,7 @@ function getEventsOfParticipant(req, res, next) {
 function createEventParticipant(req, res, next) {
   db
     .none(
-      'insert into "EventParticipants"("Event_ID","User_ID")' +
+      'insert into EventParticipants(Event_ID,User_ID)' +
         "values(${Event_ID},${User_ID})",
       req.body
     )
@@ -71,7 +71,7 @@ function removeEventParticipant(req, res, next) {
   let eventparticipant = JSON.parse(req.params.eventparticipant);
   db
     .result(
-      'delete from "EventParticipants" where "User_ID"= ${User_ID} AND "Event_ID"= ${Event_ID}',
+      'delete from EventParticipants where User_ID= ${User_ID} AND Event_ID= ${Event_ID}',
       eventparticipant
     )
     .then(function(result) {
