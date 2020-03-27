@@ -4,6 +4,7 @@ var router = express.Router();
 var db = require("./queries/queriesEvents");
 
 router.get("/", db.getAllEvents);
+router.post("/area", db.getAllEventsInArea);
 router.get("/:id", db.getSingleEvent);
 router.post("/", db.createEvent);
 router.put("/", db.updateEvent);

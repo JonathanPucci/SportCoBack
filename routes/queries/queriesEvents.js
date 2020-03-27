@@ -17,10 +17,15 @@ function getAllEvents(req, res, next) {
 }
 
 function getAllEventsInArea(req, res, next) {
-  let area = req.body.area;
-
+  let areaSelected = req.body;
+  let area = {
+    latitude_min : (areaSelected.latitude -areaSelected.latitudeDelta/2).toString(),
+    latitude_max : (areaSelected.latitude +areaSelected.latitudeDelta/2).toString(),
+    longitude_min : (areaSelected.longitude -areaSelected.longitudeDelta/2).toString(),
+    longitude_max : (areaSelected.longitude +areaSelected.longitudeDelta/2).toString(),
+  }
   db
-    .any('select * from events INNER JOIN spots ON spots.spot_id = events.spot_id;')
+    .any("select * from events INNER JOIN spots ON spots.spot_id = events.spot_id WHERE spots.spot_longitude BETWEEN ${longitude_min} AND ${longitude_max} AND spots.spot_latitude BETWEEN ${latitude_min} AND ${latitude_max};", area)
     .then(function (data) {
       res.status(200).json({
         status: "success",
@@ -122,6 +127,7 @@ function removeEvent(req, res, next) {
 module.exports = {
   getAllEvents: getAllEvents,
   getSingleEvent: getSingleEvent,
+  getAllEventsInArea : getAllEventsInArea,
   createEvent: createEvent,
   updateEvent: updateEvent,
   removeEvent: removeEvent
