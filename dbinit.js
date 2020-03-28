@@ -1,14 +1,17 @@
 var db = require("./dbconnection").db;
+var creatUserDB = require("./routes/queries/queriesUsers").createUser;
 
-function createUser(id, name) {
+function createUser(id, name,email,photourl = undefined) {
   let user = {
     User_ID: id,
-    User_Name: name
+    User_Name: name,
+    Email : email,
+    Photo_url : photourl
   };
   return db
     .none(
-      'insert into Users(User_ID,User_Name)' +
-      "values(${User_ID},${User_Name})",
+      'insert into Users(User_ID,User_Name,Email,Photo_url)' +
+      "values(${User_ID},${User_Name},${Email},${Photo_url})",
       user
     )
     .then(function () {
@@ -107,9 +110,9 @@ function createSpot(id, lla, llo) {
 db
   .none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
   .then(() => {
-    createUser("1", "Jon").then(() => {
-      createUser("2", "Omar").then(() => {
-        createUser("3", "Quentin").then(() => {
+    createUser("1", "Jon", "Jonathan@blabla.com","https://graph.facebook.com/3147119735300212/picture").then(() => {
+      createUser("2", "Omar", "Omar@blabbla.com").then(() => {
+        createUser("3", "Quentin", "Quentin@blabbla.com").then(() => {
           createSpot("1", "43.591317", "7.124781").then(() => {
             createSpot("2", "43.5965538", "7.0980908").then(() => {
               createSpot("3", "43.5769976", "7.1206588").then(() => {

@@ -3,6 +3,8 @@
 CREATE TABLE Users (
 	User_ID serial NOT NULL,
 	User_Name TEXT NOT NULL,
+	Email VARCHAR(255) NOT NULL UNIQUE,
+	Photo_url VARCHAR(255),
 	CONSTRAINT Users_pk PRIMARY KEY (User_ID)
 ) WITH (
   OIDS=FALSE
