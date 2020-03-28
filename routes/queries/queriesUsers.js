@@ -88,7 +88,7 @@ function updateUserByEmail(req, res, next) {
       req.body.email,
       req.body.photo_url
     ])
-    .then(function () {
+    .then(function (data) {
       res.status(200).json({
         status: "success",
         message: "Updated User"

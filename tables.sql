@@ -1,11 +1,11 @@
 
 
 CREATE TABLE Users (
-	User_ID serial NOT NULL,
+	user_id serial NOT NULL,
 	User_Name TEXT NOT NULL,
 	Email VARCHAR(255) NOT NULL UNIQUE,
 	Photo_url VARCHAR(255),
-	CONSTRAINT Users_pk PRIMARY KEY (User_ID)
+	CONSTRAINT Users_pk PRIMARY KEY (user_id)
 ) WITH (
   OIDS=FALSE
 );
@@ -13,7 +13,7 @@ CREATE TABLE Users (
 
 
 CREATE TABLE Events (
-	Event_ID serial NOT NULL,
+	event_id serial NOT NULL,
 	Description TEXT,
 	Photo TEXT,
 	Date DATE NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE Events (
 	Participants_min int NOT NULL,
 	Participants_max int NOT NULL,
 	Sport TEXT NOT NULL,
-	CONSTRAINT Events_pk PRIMARY KEY (Event_ID)
+	CONSTRAINT Events_pk PRIMARY KEY (event_id)
 ) WITH (
   OIDS=FALSE
 );
@@ -39,8 +39,9 @@ CREATE TABLE Spots (
 );
 
 CREATE TABLE EventParticipants (
-	User_ID serial NOT NULL,
-	Event_ID serial NOT NULL
+	user_id serial NOT NULL,
+	event_id serial NOT NULL,
+	UNIQUE (user_id,event_id)
 ) WITH (
   OIDS=FALSE
 );
@@ -55,8 +56,8 @@ CREATE TABLE FieldSpots (
 
 
 
-ALTER TABLE Events ADD CONSTRAINT Events_fk0 FOREIGN KEY (Host_ID) REFERENCES Users(User_ID) ON DELETE CASCADE;
+ALTER TABLE Events ADD CONSTRAINT Events_fk0 FOREIGN KEY (Host_ID) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;
 ALTER TABLE FieldSpots ADD CONSTRAINT FieldSpots_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;
-ALTER TABLE EventParticipants ADD CONSTRAINT EventParticipants_fk0 FOREIGN KEY (Event_ID) REFERENCES Events(Event_ID) ON DELETE CASCADE;
-ALTER TABLE EventParticipants ADD CONSTRAINT EventParticipants_fk1 FOREIGN KEY (User_ID) REFERENCES Users(User_ID) ON DELETE CASCADE;
+ALTER TABLE EventParticipants ADD CONSTRAINT EventParticipants_fk0 FOREIGN KEY (event_id) REFERENCES Events(event_id) ON DELETE CASCADE;
+ALTER TABLE EventParticipants ADD CONSTRAINT EventParticipants_fk1 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;

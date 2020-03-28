@@ -19,7 +19,7 @@ function getAllEventParticipants(req, res, next) {
 function getParticipantsOfEvent(req, res, next) {
   var eventID = parseInt(req.params.id);
   db
-    .one('select * from EventParticipants where Event_ID = $1', eventID)
+    .one('select * from EventParticipants where event_id = $1', eventID)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -33,14 +33,14 @@ function getParticipantsOfEvent(req, res, next) {
 }
 
 function getEventsOfParticipant(req, res, next) {
-  var User_ID = parseInt(req.params.id);
+  var user_id = parseInt(req.params.id);
   db
-    .one('select * from EventParticipants where User_ID = $1', User_ID)
+    .one('select * from EventParticipants where user_id = $1', user_id)
     .then(function(data) {
       res.status(200).json({
         status: "success",
         data: data,
-        message: "Retrieved events of participant" + User_ID
+        message: "Retrieved events of participant" + user_id
       });
     })
     .catch(function(err) {
@@ -51,8 +51,8 @@ function getEventsOfParticipant(req, res, next) {
 function createEventParticipant(req, res, next) {
   db
     .none(
-      'insert into EventParticipants(Event_ID,User_ID)' +
-        "values(${Event_ID},${User_ID})",
+      'insert into EventParticipants(event_id,user_id)' +
+        "values(${event_id},${user_id})",
       req.body
     )
     .then(function() {
@@ -67,11 +67,10 @@ function createEventParticipant(req, res, next) {
 }
 
 function removeEventParticipant(req, res, next) {
-  console.log(JSON.stringify(req.params.eventparticipant))
   let eventparticipant = JSON.parse(req.params.eventparticipant);
   db
     .result(
-      'delete from EventParticipants where User_ID= ${User_ID} AND Event_ID= ${Event_ID}',
+      'delete from EventParticipants where user_id= ${user_id} AND event_id= ${event_id}',
       eventparticipant
     )
     .then(function(result) {

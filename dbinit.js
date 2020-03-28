@@ -110,7 +110,7 @@ function createSpot(id, lla, llo) {
 db
   .none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
   .then(() => {
-    createUser("1", "Jon", "Jonathan@blabla.com","https://graph.facebook.com/3147119735300212/picture").then(() => {
+    createUser("1", "Jon", "jon.p@hotmail.fr","https://graph.facebook.com/3147119735300212/picture").then(() => {
       createUser("2", "Omar", "Omar@blabbla.com").then(() => {
         createUser("3", "Quentin", "Quentin@blabbla.com").then(() => {
           createSpot("1", "43.591317", "7.124781").then(() => {
