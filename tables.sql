@@ -31,6 +31,7 @@ CREATE TABLE Events (
 
 CREATE TABLE Spots (
 	Spot_ID serial NOT NULL,
+	Spot_name TEXT,
 	Spot_longitude TEXT NOT NULL,
 	Spot_latitude TEXT NOT NULL,
 	CONSTRAINT Spots_pk PRIMARY KEY (Spot_ID)

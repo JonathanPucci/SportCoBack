@@ -73,7 +73,7 @@ function getSingleEvent(req, res, next) {
 
 function createEvent(req, res, next) {
   db
-    .none(
+    .any(
       'insert into Events( event_id,description, photo, date, host_id, spot_id, participants_min, participants_max, sport)' +
       "values( DEFAULT, ${ description}, ${ photo}, ${ date}, ${ host_id}, ${ spot_id}, ${ participants_min}, ${ participants_max}, ${ sport}) RETURNING event_id",
       req.body
@@ -83,11 +83,14 @@ function createEvent(req, res, next) {
         status: "success",
         message: "Inserted one Event",
         data: {
-          eventId: data,
+          event_id: data[0].event_id,
         },
       });
     })
     .catch(function (err) {
+      console.log("==============ERROOOOOORRR=========");
+      console.log(err);
+      console.log("==============ERROOOOOORRR=========");
       return next(err);
     });
 }

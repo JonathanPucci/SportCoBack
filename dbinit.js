@@ -86,17 +86,18 @@ function createEvent(id,des, p, da, hid, spid, pmi, pma, s) {
     });
 }
 
-function createSpot(id, lla, llo) {
+function createSpot(id,name, lla, llo) {
   let spot = {
     Spot_ID: id,
+    Spot_name : name,
     Spot_longitude: llo,
     Spot_latitude: lla
   };
 
   return db
     .none(
-      'insert into Spots(Spot_ID,Spot_longitude,Spot_latitude)' +
-      "values(${Spot_ID},${Spot_longitude}, ${Spot_latitude})",
+      'insert into Spots(Spot_ID,Spot_name,Spot_longitude,Spot_latitude)' +
+      "values(${Spot_ID},$(Spot_name),${Spot_longitude}, ${Spot_latitude})",
       spot
     )
     .then(function () {
@@ -113,9 +114,9 @@ db
     createUser("1", "Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture").then(() => {
       createUser("2", "Omar", "Omar@blabbla.com").then(() => {
         createUser("3", "Quentin", "Quentin@blabbla.com").then(() => {
-          createSpot("1", "43.591317", "7.124781").then(() => {
-            createSpot("2", "43.5965538", "7.0980908").then(() => {
-              createSpot("3", "43.5769976", "7.1206588").then(() => {
+          createSpot("1",'Stade Fort Carré', "43.591317", "7.124781").then(() => {
+            createSpot("2",'SpotFutsal', "43.5965538", "7.0980908").then(() => {
+              createSpot("3",'Stade Foch', "43.5769976", "7.1206588").then(() => {
                 createEvent(
                   "1",
                   "Session de foot à 8 au Fort Carré",
