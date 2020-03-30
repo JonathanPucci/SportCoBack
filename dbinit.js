@@ -1,12 +1,12 @@
 var db = require("./dbconnection").db;
 var creatUserDB = require("./routes/queries/queriesUsers").createUser;
 
-function createUser(id, name,email,photourl = undefined) {
+function createUser(id, name, email, photourl = undefined) {
   let user = {
     User_ID: id,
     User_Name: name,
-    Email : email,
-    Photo_url : photourl
+    Email: email,
+    Photo_url: photourl
   };
   return db
     .none(
@@ -60,9 +60,9 @@ function createFieldSpot(field, spid) {
     });
 }
 
-function createEvent(id, des, p, da, hid, spid, pmi, pma, s) {
+function createEvent(id,des, p, da, hid, spid, pmi, pma, s) {
   let myevent = {
-    Event_ID: id,
+    Event_ID : id,
     Description: des,
     Photo: p,
     Date: da,
@@ -110,7 +110,7 @@ function createSpot(id, lla, llo) {
 db
   .none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
   .then(() => {
-    createUser("1", "Jon", "jon.p@hotmail.fr","https://graph.facebook.com/3147119735300212/picture").then(() => {
+    createUser("1", "Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture").then(() => {
       createUser("2", "Omar", "Omar@blabbla.com").then(() => {
         createUser("3", "Quentin", "Quentin@blabbla.com").then(() => {
           createSpot("1", "43.591317", "7.124781").then(() => {

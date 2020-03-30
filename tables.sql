@@ -16,7 +16,7 @@ CREATE TABLE Events (
 	event_id serial NOT NULL,
 	Description TEXT,
 	Photo TEXT,
-	Date DATE NOT NULL,
+	Date timestamp NOT NULL,
 	Host_ID bigint NOT NULL,
 	Spot_ID bigint NOT NULL,
 	Participants_min int NOT NULL,
