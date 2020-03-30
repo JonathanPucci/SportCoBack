@@ -57,19 +57,23 @@ function getSingleSpotByCoordinates(req, res, next) {
 }
 
 function createSpot(req, res, next) {
+  console.log(req.body);
   db
-    .none(
-      'insert into Spots(Spot_name,Spot_longitude,Spot_latitude)' +
-      "values($(Spot_name),${Spot_longitude}, ${Spot_latitude})",
+    .any(
+      'insert into Spots(spot_id,spot_name,spot_longitude,spot_latitude)' +
+      "values(DEFAULT, $(spot_name),${spot_longitude}, ${spot_latitude}) RETURNING spot_id",
       req.body
     )
-    .then(function () {
+    .then(function (data) {
+      console.log(data);
       res.status(200).json({
         status: "success",
-        message: "Inserted one Spot"
+        message: "Inserted one Spot",
+        data : {spot_id : data[0].user_id}
       });
     })
     .catch(function (err) {
+      console.log(err);
       return next(err);
     });
 }
@@ -77,11 +81,11 @@ function createSpot(req, res, next) {
 function updateSpot(req, res, next) {
   db
     .none(
-      'update Spots set Spot_longitude=$2,Spot_latitude=$3 where Spot_ID=$1',
+      'update Spots set spot_longitude=$2,spot_latitude=$3 where Spot_ID=$1',
       [
         req.body.Spot_ID,
-        req.body.Spot_longitude,
-        req.body.Spot_latitude,
+        req.body.spot_longitude,
+        req.body.spot_latitude,
       ]
     )
     .then(function () {

@@ -1,9 +1,8 @@
 var db = require("./dbconnection").db;
 var creatUserDB = require("./routes/queries/queriesUsers").createUser;
 
-function createUser(id, name, email, photourl = undefined) {
+function createUser(name, email, photourl = undefined) {
   let user = {
-    User_ID: id,
     User_Name: name,
     Email: email,
     Photo_url: photourl
@@ -11,7 +10,7 @@ function createUser(id, name, email, photourl = undefined) {
   return db
     .none(
       'insert into Users(User_ID,User_Name,Email,Photo_url)' +
-      "values(${User_ID},${User_Name},${Email},${Photo_url})",
+      "values(DEFAULT,${User_Name},${Email},${Photo_url})",
       user
     )
     .then(function () {
@@ -44,12 +43,12 @@ function createEventParticipant(eid, uid) {
 function createFieldSpot(field, spid) {
   let fs = {
     Field: field,
-    Spot_ID: spid
+    spot_id: spid
   };
   return db
     .none(
-      'insert into FieldSpots(Spot_ID,Field)' +
-      "values(${Spot_ID},${Field})",
+      'insert into FieldSpots(spot_id,Field)' +
+      "values(${spot_id},${Field})",
       fs
     )
     .then(function () {
@@ -60,22 +59,21 @@ function createFieldSpot(field, spid) {
     });
 }
 
-function createEvent(id,des, p, da, hid, spid, pmi, pma, s) {
+function createEvent(des, p, da, hid, spid, pmi, pma, s) {
   let myevent = {
-    Event_ID : id,
     Description: des,
     Photo: p,
     Date: da,
     Host_ID: hid,
-    Spot_ID: spid,
+    spot_id: spid,
     Participants_min: pmi,
     Participants_max: pma,
     Sport: s
   };
   return db
     .none(
-      'insert into Events(Event_ID, Description, Photo, Date, Host_ID, Spot_ID, Participants_min, Participants_max, Sport)' +
-      "values(${Event_ID}, ${ Description}, ${ Photo}, ${ Date}, ${ Host_ID}, ${ Spot_ID}, ${ Participants_min}, ${ Participants_max}, ${ Sport})",
+      'insert into Events(Event_ID, Description, Photo, Date, Host_ID, spot_id, Participants_min, Participants_max, Sport)' +
+      "values(DEFAULT, ${ Description}, ${ Photo}, ${ Date}, ${ Host_ID}, ${ spot_id}, ${ Participants_min}, ${ Participants_max}, ${ Sport})",
       myevent
     )
     .then(function () {
@@ -86,18 +84,17 @@ function createEvent(id,des, p, da, hid, spid, pmi, pma, s) {
     });
 }
 
-function createSpot(id,name, lla, llo) {
+function createSpot(name, lla, llo) {
   let spot = {
-    Spot_ID: id,
-    Spot_name : name,
-    Spot_longitude: llo,
-    Spot_latitude: lla
+    spot_name: name,
+    spot_longitude: llo,
+    spot_latitude: lla
   };
 
   return db
     .none(
-      'insert into Spots(Spot_ID,Spot_name,Spot_longitude,Spot_latitude)' +
-      "values(${Spot_ID},$(Spot_name),${Spot_longitude}, ${Spot_latitude})",
+      'insert into Spots(spot_id,spot_name,spot_longitude,spot_latitude)' +
+      "values(DEFAULT,$(spot_name),${spot_longitude}, ${spot_latitude})",
       spot
     )
     .then(function () {
@@ -108,64 +105,83 @@ function createSpot(id,name, lla, llo) {
     });
 }
 
-db
-  .none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
+db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
   .then(() => {
-    createUser("1", "Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture").then(() => {
-      createUser("2", "Omar", "Omar@blabbla.com").then(() => {
-        createUser("3", "Quentin", "Quentin@blabbla.com").then(() => {
-          createSpot("1",'Stade Fort Carré', "43.591317", "7.124781").then(() => {
-            createSpot("2",'SpotFutsal', "43.5965538", "7.0980908").then(() => {
-              createSpot("3",'Stade Foch', "43.5769976", "7.1206588").then(() => {
-                createEvent(
-                  "1",
-                  "Session de foot à 8 au Fort Carré",
-                  "photo",
-                  "01/01/2018",
-                  "1",
-                  "1",
-                  "0",
-                  "10",
-                  "soccer"
-                ).then(() => {
-                  createEvent(
-                    "2",
-                    "Session de foot à 5 en salle",
-                    "photo",
-                    "01/01/2018",
-                    "2",
-                    "2",
-                    "0",
-                    "5",
-                    "futsal"
-                  ).then(() => {
-                    createEvent(
-                      "3",
-                      "Session de basket sur le terrain Foch",
-                      "photo",
-                      "01/01/2018",
-                      "1",
-                      "3",
-                      "0",
-                      "8",
-                      "basket"
-                    ).then(() => {
-                      createEventParticipant("1", "1").then(() => {
-                        createFieldSpot("basket", "1").then(() => {
-                          createFieldSpot("futsal", "2").then(() => {
-                            createFieldSpot("basket", "3")
+    db.none('ALTER SEQUENCE fieldspots_spot_id_seq RESTART; ')
+      .then(() => {
+        db.none('ALTER SEQUENCE spots_spot_id_seq RESTART; ')
+          .then(() => {
+            db.none('ALTER SEQUENCE users_user_id_seq RESTART; ')
+              .then(() => {
+                db.none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
+                  .then(() => {
+                    createUser("Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture").then(() => {
+                      createUser("Omar", "Omar@blabbla.com").then(() => {
+                        createUser("Quentin", "Quentin@blabbla.com").then(() => {
+                          createSpot('Stade Fort Carré', "43.591317", "7.124781").then(() => {
+                            createSpot('SpotFutsal', "43.5965538", "7.0980908").then(() => {
+                              createSpot('Stade Foch', "43.5769976", "7.1206588").then(() => {
+                                createEvent(
+                                  "Session de foot à 8 au Fort Carré",
+                                  "photo",
+                                  "01/01/2018",
+                                  "1",
+                                  "1",
+                                  "0",
+                                  "10",
+                                  "soccer"
+                                ).then(() => {
+                                  createEvent(
+                                    "Ptit futsal au Fort Carré",
+                                    "photo",
+                                    "01/01/2020",
+                                    "1",
+                                    "1",
+                                    "0",
+                                    "10",
+                                    "futsal"
+                                  ).then(() => {
+                                    createEvent(
+                                      "Session de foot à 5 en salle",
+                                      "photo",
+                                      "01/01/2018",
+                                      "2",
+                                      "2",
+                                      "0",
+                                      "5",
+                                      "futsal"
+                                    ).then(() => {
+                                      createEvent(
+                                        "Session de basket sur le terrain Foch",
+                                        "photo",
+                                        "01/01/2018",
+                                        "1",
+                                        "3",
+                                        "0",
+                                        "8",
+                                        "basket"
+                                      ).then(() => {
+                                        createEventParticipant("1", "1").then(() => {
+                                          createFieldSpot("basket", "1").then(() => {
+                                            createFieldSpot("futsal", "2").then(() => {
+                                              createFieldSpot("basket", "3")
+                                            });
+                                          });
+                                        });
+                                      });
+                                    });
+                                  });
+                                });
+                              });
+                            });
                           });
                         });
                       });
                     });
                   });
-                });
               });
-            });
           });
-        });
-      });
-    })
+      })
   })
   .catch(function (err) {
     console.log("error while cleaning db" + err);
