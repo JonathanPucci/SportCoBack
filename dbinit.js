@@ -21,6 +21,21 @@ function createUser(name, email, photourl = undefined) {
     });
 }
 
+function createUserStats(userid) {
+  return db
+    .none(
+      'insert into userstats(user_id)' +
+      "values($1)",
+      userid
+    )
+    .then(function () {
+      console.log("added userstat for userid " + userid);
+    })
+    .catch(function (err) {
+      console.log("error while adding user" + err);
+    });
+}
+
 function createEventParticipant(eid, uid) {
   let ep = {
     User_ID: uid,
@@ -118,53 +133,59 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                     createUser("Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture").then(() => {
                       createUser("Omar", "Omar@blabbla.com").then(() => {
                         createUser("Quentin", "Quentin@blabbla.com").then(() => {
-                          createSpot('Stade Fort Carré', "43.591317", "7.124781").then(() => {
-                            createSpot('SpotFutsal', "43.5965538", "7.0980908").then(() => {
-                              createSpot('Stade Foch', "43.5769976", "7.1206588").then(() => {
-                                createEvent(
-                                  "Session de foot à 8 au Fort Carré",
-                                  "photo",
-                                  "01/01/2018",
-                                  "1",
-                                  "1",
-                                  "0",
-                                  "10",
-                                  "soccer"
-                                ).then(() => {
-                                  createEvent(
-                                    "Ptit futsal au Fort Carré",
-                                    "photo",
-                                    "01/01/2020",
-                                    "1",
-                                    "1",
-                                    "0",
-                                    "10",
-                                    "futsal"
-                                  ).then(() => {
-                                    createEvent(
-                                      "Session de foot à 5 en salle",
-                                      "photo",
-                                      "01/01/2018",
-                                      "2",
-                                      "2",
-                                      "0",
-                                      "5",
-                                      "futsal"
-                                    ).then(() => {
+                          createUserStats(1).then(() => {
+                            createUserStats(2).then(() => {
+                              createUserStats(3).then(() => {
+                                createSpot('Stade Fort Carré', "43.591317", "7.124781").then(() => {
+                                  createSpot('SpotFutsal', "43.5965538", "7.0980908").then(() => {
+                                    createSpot('Stade Foch', "43.5769976", "7.1206588").then(() => {
                                       createEvent(
-                                        "Session de basket sur le terrain Foch",
+                                        "Session de foot à 8 au Fort Carré",
                                         "photo",
                                         "01/01/2018",
                                         "1",
-                                        "3",
+                                        "1",
                                         "0",
-                                        "8",
-                                        "basket"
+                                        "10",
+                                        "soccer"
                                       ).then(() => {
-                                        createEventParticipant("1", "1").then(() => {
-                                          createFieldSpot("basket", "1").then(() => {
-                                            createFieldSpot("futsal", "2").then(() => {
-                                              createFieldSpot("basket", "3")
+                                        createEvent(
+                                          "Ptit futsal au Fort Carré",
+                                          "photo",
+                                          "01/01/2020",
+                                          "1",
+                                          "1",
+                                          "0",
+                                          "10",
+                                          "futsal"
+                                        ).then(() => {
+                                          createEvent(
+                                            "Session de foot à 5 en salle",
+                                            "photo",
+                                            "01/01/2018",
+                                            "2",
+                                            "2",
+                                            "0",
+                                            "5",
+                                            "futsal"
+                                          ).then(() => {
+                                            createEvent(
+                                              "Session de basket sur le terrain Foch",
+                                              "photo",
+                                              "01/01/2018",
+                                              "1",
+                                              "3",
+                                              "0",
+                                              "8",
+                                              "basket"
+                                            ).then(() => {
+                                              createEventParticipant("1", "1").then(() => {
+                                                createFieldSpot("basket", "1").then(() => {
+                                                  createFieldSpot("futsal", "2").then(() => {
+                                                    createFieldSpot("basket", "3")
+                                                  });
+                                                });
+                                              });
                                             });
                                           });
                                         });

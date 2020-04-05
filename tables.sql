@@ -10,6 +10,29 @@ CREATE TABLE Users (
   OIDS=FALSE
 );
 
+CREATE TABLE UserStats (
+	user_id bigint NOT NULL,
+	basket_joined bigint DEFAULT 0,
+	tennis_joined bigint DEFAULT 0,
+	soccer_joined bigint DEFAULT 0,
+	futsal_joined bigint DEFAULT 0,
+	beachvolley_joined bigint DEFAULT 0,
+	volley_joined bigint DEFAULT 0,
+	workout_joined bigint DEFAULT 0,
+	running_joined bigint DEFAULT 0,	
+	basket_created bigint DEFAULT 0,
+	tennis_created bigint DEFAULT 0,
+	soccer_created bigint DEFAULT 0,
+	futsal_created bigint DEFAULT 0,
+	beachvolley_created bigint DEFAULT 0,
+	volley_created bigint DEFAULT 0,
+	workout_created bigint DEFAULT 0,
+	running_created bigint DEFAULT 0,	
+	CONSTRAINT user_id PRIMARY KEY (user_id)
+) WITH (
+  OIDS=FALSE
+);
+
 
 
 CREATE TABLE Events (
@@ -57,6 +80,7 @@ CREATE TABLE FieldSpots (
 
 
 
+ALTER TABLE UserStats ADD CONSTRAINT UserStats_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk0 FOREIGN KEY (Host_ID) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;
 ALTER TABLE FieldSpots ADD CONSTRAINT FieldSpots_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;

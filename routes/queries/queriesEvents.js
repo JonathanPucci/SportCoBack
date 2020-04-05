@@ -114,7 +114,6 @@ function updateEvent(req, res, next) {
 
 function removeEvent(req, res, next) {
   var event = JSON.parse(req.params.event);
-
   db
     .result('delete from Events where event_id = ${event_id}', event)
     .then(function (result) {
