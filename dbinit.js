@@ -164,7 +164,7 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                                               "Session de foot à 5 en salle",
                                               "photo",
                                               "01/01/2018",
-                                              "2",
+                                              "3",
                                               "2",
                                               "0",
                                               "5",
@@ -181,13 +181,15 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                                                 "basket"
                                               ).then(() => {
                                                 createEventParticipant("1", "1").then(() => {
-                                                  createFieldSpot("basket", "1").then(() => {
+                                                  createEventParticipant("3", "1").then(() => {
+                                                    createFieldSpot("basket", "1").then(() => {
                                                     createFieldSpot("futsal", "2").then(() => {
                                                       createFieldSpot("basket", "3")
                                                     });
                                                   });
                                                 });
                                               });
+                                            });
                                             });
                                           });
                                         });
@@ -211,4 +213,10 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
   });
 
 
-sendNotifications(['ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]'])
+sendNotifications([{
+  user_push_token : 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
+  user_id : 1,
+  message_type : 'EVENT_CHANGED',
+  data_type: 'event_id',
+  data_value : 3
+}])

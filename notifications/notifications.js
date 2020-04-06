@@ -1,12 +1,14 @@
 const { Expo } = require('expo-server-sdk');
+var db = require("../dbconnection").db;
 
-function sendNotifications(somePushTokens,messageType, dataToSend) {
+function sendNotifications(participantNotifs) {
     // Create a new Expo SDK client
     let expo = new Expo();
 
     // Create the messages that you want to send to clents
     let messages = [];
-    for (let pushToken of somePushTokens) {
+    for (let notif of participantNotifs) {
+        let pushToken = notif.user_push_token;
         // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
         // Check that all your push tokens appear to be valid Expo push tokens
         if (!Expo.isExpoPushToken(pushToken)) {
@@ -14,9 +16,12 @@ function sendNotifications(somePushTokens,messageType, dataToSend) {
             continue;
         }
         let messageBody = '';
-        switch (messageType) {
+        switch (notif.message_type) {
             case 'EVENT_CHANGED':
                 messageBody = 'Event has changed ! Come check it out';
+                break;
+            case 'EVENT_CANCELED':
+                messageBody = 'Event has been canceled !';
                 break;
             case 'NEW_EVENT_NEARBY':
                 messageBody = "New event nearby, you should have a look if you're free !";
@@ -29,7 +34,7 @@ function sendNotifications(somePushTokens,messageType, dataToSend) {
             to: pushToken,
             sound: 'default',
             body: messageBody,
-            data: dataToSend,
+            data: notif,
         })
     }
 
@@ -46,8 +51,12 @@ function sendNotifications(somePushTokens,messageType, dataToSend) {
         // time, which nicely spreads the load out over time:
         for (let chunk of chunks) {
             try {
+                console.log(chunk[0].data);
                 let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-                console.log(ticketChunk);
+                // console.log(ticketChunk);
+                let date = new Date();
+                chunk[0].data['date'] = date;
+                db.none('insert into UserPushNotifications(user_id,date,message_type,data_type,data_value) values(${user_id},${date},${message_type},${data_type},${data_value})', chunk[0].data)
                 tickets.push(...ticketChunk);
                 // NOTE: If a ticket contains an error code in ticket.details.error, you
                 // must handle it appropriately. The error codes are listed in the Expo

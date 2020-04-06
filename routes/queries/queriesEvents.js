@@ -107,15 +107,20 @@ function updateEvent(req, res, next) {
         status: "success",
         message: "Updated Event"
       });
-      db.any('select user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', req.body).then((data) => {
-        let participantTokens = [];
+      db.any('select users.user_id,user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', req.body).then((data) => {
+        let participantNotifs = [];
 
         for (let index = 0; index < data.length; index++) {
-          const token = data[index].user_push_token;
-          participantTokens.push(token);
+          console.log(data[index]);
+          participantNotifs.push({
+            user_push_token: data[index].user_push_token,
+            user_id: data[index].user_id,
+            message_type: req.body.reason_for_update,
+            data_type: req.body.data_name,
+            data_value: req.body.event_id
+          });
         }
-        let event_id = req.body.event_id;
-        sendNotifications(participantTokens, 'EVENT_CHANGED', {event_id : event_id});
+        sendNotifications(participantNotifs);
 
       })
     })

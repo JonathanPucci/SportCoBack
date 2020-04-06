@@ -34,6 +34,19 @@ CREATE TABLE UserStats (
   OIDS=FALSE
 );
 
+-- Max 15 per user, batch TODO to clean
+
+CREATE TABLE UserPushNotifications (
+	user_id bigint NOT NULL,
+	date timestamp NOT NULL,
+	message_type VARCHAR(255),
+	data_type VARCHAR(255),
+	data_value VARCHAR(255),
+	CONSTRAINT user_id_key_notif PRIMARY KEY (user_id,date)
+) WITH (
+  OIDS=FALSE
+);
+
 
 
 CREATE TABLE Events (
@@ -82,6 +95,7 @@ CREATE TABLE FieldSpots (
 
 
 ALTER TABLE UserStats ADD CONSTRAINT UserStats_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
+ALTER TABLE UserPushNotifications ADD CONSTRAINT UserPushNotifications_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id);
 ALTER TABLE Events ADD CONSTRAINT Events_fk0 FOREIGN KEY (Host_ID) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;
 ALTER TABLE FieldSpots ADD CONSTRAINT FieldSpots_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;
