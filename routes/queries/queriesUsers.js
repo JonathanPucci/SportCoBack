@@ -34,6 +34,8 @@ function getSingleUser(req, res, next) {
 
 function getSingleUserByEmail(req, res, next) {
   var email = req.params.id;
+  console.log("got request : select * from Users where Email = " + email);
+
   db
     .one('select * from Users where Email = $1', email)
     .then(function (data) {
@@ -44,20 +46,26 @@ function getSingleUserByEmail(req, res, next) {
       });
     })
     .catch(function (err) {
+      console.log(err);
       return next(err);
     });
 }
 
 function createUser(req, res, next) {
   return db
-    .none('insert into Users(User_Name,Email,Photo_url) values(${user_name},${email},${photo_url})', req.body)
-    .then(function () {
+    .one('insert into Users(user_id,User_Name,Email,Photo_url) values(DEFAULT,${user_name},${email},${photo_url}) RETURNING user_id', req.body)
+    .then((data)=> {
+      console.log(data);
       res.status(200).json({
         status: "success",
-        message: "Inserted one User"
+        message: "Inserted one User",
+        data : {
+          user_id: data.user_id,
+        },
       });
     })
     .catch(function (err) {
+      console.log(err);
       return next(err);
     });
 }

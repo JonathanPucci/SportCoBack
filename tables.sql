@@ -5,6 +5,7 @@ CREATE TABLE Users (
 	User_Name TEXT NOT NULL,
 	Email VARCHAR(255) NOT NULL UNIQUE,
 	Photo_url VARCHAR(255),
+	user_push_token VARCHAR(255) UNIQUE,
 	CONSTRAINT Users_pk PRIMARY KEY (user_id)
 ) WITH (
   OIDS=FALSE

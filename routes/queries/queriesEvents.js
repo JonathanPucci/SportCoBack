@@ -1,4 +1,5 @@
 var db = require("../../dbconnection").db;
+var sendNotifications = require("../../notifications/notifications").sendNotifications;
 
 // add query functions
 function getAllEvents(req, res, next) {
@@ -19,10 +20,10 @@ function getAllEvents(req, res, next) {
 function getAllEventsInArea(req, res, next) {
   let areaSelected = req.body;
   let area = {
-    latitude_min : (areaSelected.latitude -areaSelected.latitudeDelta/2).toString(),
-    latitude_max : (areaSelected.latitude +areaSelected.latitudeDelta/2).toString(),
-    longitude_min : (areaSelected.longitude -areaSelected.longitudeDelta/2).toString(),
-    longitude_max : (areaSelected.longitude +areaSelected.longitudeDelta/2).toString(),
+    latitude_min: (areaSelected.latitude - areaSelected.latitudeDelta / 2).toString(),
+    latitude_max: (areaSelected.latitude + areaSelected.latitudeDelta / 2).toString(),
+    longitude_min: (areaSelected.longitude - areaSelected.longitudeDelta / 2).toString(),
+    longitude_max: (areaSelected.longitude + areaSelected.longitudeDelta / 2).toString(),
   }
   db
     .any("select * from events INNER JOIN spots ON spots.spot_id = events.spot_id WHERE spots.spot_longitude BETWEEN ${longitude_min} AND ${longitude_max} AND spots.spot_latitude BETWEEN ${latitude_min} AND ${latitude_max};", area)
@@ -106,6 +107,17 @@ function updateEvent(req, res, next) {
         status: "success",
         message: "Updated Event"
       });
+      db.any('select user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', req.body).then((data) => {
+        let participantTokens = [];
+
+        for (let index = 0; index < data.length; index++) {
+          const token = data[index].user_push_token;
+          participantTokens.push(token);
+        }
+        let event_id = req.body.event_id;
+        sendNotifications(participantTokens, 'EVENT_CHANGED', {event_id : event_id});
+
+      })
     })
     .catch(function (err) {
       return next(err);
@@ -132,7 +144,7 @@ function removeEvent(req, res, next) {
 module.exports = {
   getAllEvents: getAllEvents,
   getSingleEvent: getSingleEvent,
-  getAllEventsInArea : getAllEventsInArea,
+  getAllEventsInArea: getAllEventsInArea,
   createEvent: createEvent,
   updateEvent: updateEvent,
   removeEvent: removeEvent

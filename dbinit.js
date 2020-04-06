@@ -1,16 +1,16 @@
 var db = require("./dbconnection").db;
-var creatUserDB = require("./routes/queries/queriesUsers").createUser;
-
-function createUser(name, email, photourl = undefined) {
+var sendNotifications = require("./notifications/notifications").sendNotifications;
+function createUser(name, email, photourl = undefined, token = undefined) {
   let user = {
     User_Name: name,
     Email: email,
-    Photo_url: photourl
+    Photo_url: photourl,
+    user_push_token: token
   };
   return db
     .none(
-      'insert into Users(User_ID,User_Name,Email,Photo_url)' +
-      "values(DEFAULT,${User_Name},${Email},${Photo_url})",
+      'insert into Users(User_ID,User_Name,Email,Photo_url,user_push_token)' +
+      "values(DEFAULT,${User_Name},${Email},${Photo_url},${user_push_token})",
       user
     )
     .then(function () {
@@ -130,59 +130,61 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
               .then(() => {
                 db.none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
                   .then(() => {
-                    createUser("Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture").then(() => {
+                    createUser("Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture", 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]').then(() => {
                       createUser("Omar", "Omar@blabbla.com").then(() => {
-                        createUser("Quentin", "Quentin@blabbla.com").then(() => {
-                          createUserStats(1).then(() => {
-                            createUserStats(2).then(() => {
-                              createUserStats(3).then(() => {
-                                createSpot('Stade Fort Carré', "43.591317", "7.124781").then(() => {
-                                  createSpot('SpotFutsal', "43.5965538", "7.0980908").then(() => {
-                                    createSpot('Stade Foch', "43.5769976", "7.1206588").then(() => {
-                                      createEvent(
-                                        "Session de foot à 8 au Fort Carré",
-                                        "photo",
-                                        "01/01/2018",
-                                        "1",
-                                        "1",
-                                        "0",
-                                        "10",
-                                        "soccer"
-                                      ).then(() => {
+                        createUser(" TestUser Doe", "testuser_rsmbxey_doe@tfbnw.net",'https://graph.facebook.com/106377624362030/picture ').then(() => {
+                          createUser("Quentin", "Quentin@blabbla.com").then(() => {
+                            createUserStats(1).then(() => {
+                              createUserStats(2).then(() => {
+                                createUserStats(3).then(() => {
+                                  createSpot('Stade Fort Carré', "43.591317", "7.124781").then(() => {
+                                    createSpot('SpotFutsal', "43.5965538", "7.0980908").then(() => {
+                                      createSpot('Stade Foch', "43.5769976", "7.1206588").then(() => {
                                         createEvent(
-                                          "Ptit futsal au Fort Carré",
+                                          "Session de foot à 8 au Fort Carré",
                                           "photo",
-                                          "01/01/2020",
+                                          "01/01/2018",
                                           "1",
                                           "1",
                                           "0",
                                           "10",
-                                          "futsal"
+                                          "soccer"
                                         ).then(() => {
                                           createEvent(
-                                            "Session de foot à 5 en salle",
+                                            "Ptit futsal au Fort Carré",
                                             "photo",
-                                            "01/01/2018",
-                                            "2",
-                                            "2",
+                                            "01/01/2020",
+                                            "1",
+                                            "1",
                                             "0",
-                                            "5",
+                                            "10",
                                             "futsal"
                                           ).then(() => {
                                             createEvent(
-                                              "Session de basket sur le terrain Foch",
+                                              "Session de foot à 5 en salle",
                                               "photo",
                                               "01/01/2018",
-                                              "1",
-                                              "3",
+                                              "2",
+                                              "2",
                                               "0",
-                                              "8",
-                                              "basket"
+                                              "5",
+                                              "futsal"
                                             ).then(() => {
-                                              createEventParticipant("1", "1").then(() => {
-                                                createFieldSpot("basket", "1").then(() => {
-                                                  createFieldSpot("futsal", "2").then(() => {
-                                                    createFieldSpot("basket", "3")
+                                              createEvent(
+                                                "Session de basket sur le terrain Foch",
+                                                "photo",
+                                                "01/01/2018",
+                                                "1",
+                                                "3",
+                                                "0",
+                                                "8",
+                                                "basket"
+                                              ).then(() => {
+                                                createEventParticipant("1", "1").then(() => {
+                                                  createFieldSpot("basket", "1").then(() => {
+                                                    createFieldSpot("futsal", "2").then(() => {
+                                                      createFieldSpot("basket", "3")
+                                                    });
                                                   });
                                                 });
                                               });
@@ -208,38 +210,5 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
     console.log("error while cleaning db" + err);
   });
 
-/*
 
-
-   {
-      key:"1",
-      coordinate: {
-          latitude: 43.591317,
-          longitude: 7.124781,
-      },
-      title: "Foot à 8",
-      description: "Session de foot à 8 au Fort Carré",
-      sport : 'soccer',
-  },
-  {
-      key:"2",
-      coordinate: {
-          latitude: 43.5965538,
-          longitude: 7.0980908,
-      },
-      title: "Foot à 5",
-      description: "Session de foot à 5 en salle",
-      sport : 'futsal',
-  },
-  {
-      key:"3",
-      coordinate: {
-          latitude: 43.5769976,
-          longitude: 7.1206588,
-      },
-      title: "Basket à 4",
-      description: "Session de basket sur le terrain Foch",
-      sport : 'basket',
-  }
-
-  */
+sendNotifications(['ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]'])
