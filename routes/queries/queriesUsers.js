@@ -17,9 +17,9 @@ function getAllUsers(req, res, next) {
 }
 
 function getSingleUser(req, res, next) {
-  var eventID = parseInt(req.params.id);
+  var userId = parseInt(req.params.id);
   db
-    .one('select * from Users where User_ID = $1', eventID)
+    .one('select * from Users where user_id = $1', userId)
     .then(function (data) {
       res.status(200).json({
         status: "success",
@@ -32,9 +32,24 @@ function getSingleUser(req, res, next) {
     });
 }
 
+function getSingleUserNotifications(req, res, next) {
+  var userId = parseInt(req.params.id);
+  db
+    .any('select * from userpushnotifications where user_id = $1', userId)
+    .then(function (data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Retrieved User notifs"
+      });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 function getSingleUserByEmail(req, res, next) {
   var email = req.params.id;
-  console.log("got request : select * from Users where Email = " + email);
 
   db
     .one('select * from Users where Email = $1', email)
@@ -54,12 +69,11 @@ function getSingleUserByEmail(req, res, next) {
 function createUser(req, res, next) {
   return db
     .one('insert into Users(user_id,User_Name,Email,Photo_url) values(DEFAULT,${user_name},${email},${photo_url}) RETURNING user_id', req.body)
-    .then((data)=> {
-      console.log(data);
+    .then((data) => {
       res.status(200).json({
         status: "success",
         message: "Inserted one User",
-        data : {
+        data: {
           user_id: data.user_id,
         },
       });
@@ -72,11 +86,11 @@ function createUser(req, res, next) {
 
 function updateUser(req, res, next) {
   db
-    .none('update Users set User_Name=$1, Email=$2, Photo_url=$3 where User_ID=$4', [
+    .none('update Users set User_Name=$1, Email=$2, Photo_url=$3 where user_id=$4', [
       req.body.User_Name,
       req.body.Email,
       req.body.Photo_url,
-      req.body.User_ID
+      req.body.user_id
     ])
     .then(function () {
       res.status(200).json({
@@ -111,7 +125,7 @@ function removeUser(req, res, next) {
   var user = JSON.parse(req.params.user);
 
   db
-    .result('delete from Users where User_ID= ${User_ID}', user)
+    .result('delete from Users where user_id= ${user_id}', user)
     .then(function (result) {
       /* jshint ignore:start */
       res.status(200).json({
@@ -128,6 +142,7 @@ function removeUser(req, res, next) {
 module.exports = {
   getAllUsers: getAllUsers,
   getSingleUser: getSingleUser,
+  getSingleUserNotifications: getSingleUserNotifications,
   getSingleUserByEmail: getSingleUserByEmail,
   createUser: createUser,
   updateUser: updateUser,

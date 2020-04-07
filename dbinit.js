@@ -132,7 +132,7 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                   .then(() => {
                     createUser("Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture", 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]').then(() => {
                       createUser("Omar", "Omar@blabbla.com").then(() => {
-                        createUser(" TestUser Doe", "testuser_rsmbxey_doe@tfbnw.net",'https://graph.facebook.com/106377624362030/picture ').then(() => {
+                        createUser("TestUser Doe", "testuser_rsmbxey_doe@tfbnw.net",'https://graph.facebook.com/106377624362030/picture').then(() => {
                           createUser("Quentin", "Quentin@blabbla.com").then(() => {
                             createUserStats(1).then(() => {
                               createUserStats(2).then(() => {
@@ -219,4 +219,20 @@ sendNotifications([{
   message_type : 'EVENT_CHANGED',
   data_type: 'event_id',
   data_value : 3
+}])
+
+sendNotifications([{
+  user_push_token : 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
+  user_id : 1,
+  message_type : 'NEW_EVENT',
+  data_type: 'event_id',
+  data_value : 4
+}])
+
+sendNotifications([{
+  user_push_token : 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
+  user_id : 1,
+  message_type : 'EVENT_CANCELED',
+  data_type: 'event_id',
+  data_value : 2
 }])

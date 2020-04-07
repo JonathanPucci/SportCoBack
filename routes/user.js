@@ -5,6 +5,7 @@ var db = require("./queries/queriesUsers");
 
 router.get("/", db.getAllUsers);
 router.get("/email/:id", db.getSingleUserByEmail);
+router.get("/notifications/:id", db.getSingleUserNotifications);
 router.get("/:id", db.getSingleUser);
 router.post("/", db.createUser);
 router.put("/update", db.updateUserByEmail);
