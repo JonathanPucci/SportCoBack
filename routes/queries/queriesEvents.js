@@ -131,15 +131,33 @@ function updateEvent(req, res, next) {
 
 function removeEvent(req, res, next) {
   var event = JSON.parse(req.params.event);
-  db
-    .result('delete from Events where event_id = ${event_id}', event)
-    .then(function (result) {
-      /* jshint ignore:start */
-      res.status(200).json({
-        status: "success",
-        message: `Removed ${result.rowCount} Event`
-      });
-      /* jshint ignore:end */
+  db.any('select users.user_id,user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', event)
+    .then((data) => {
+      let participantNotifs = [];
+      db
+        .one('select * from Events where event_id = $1', event.event_id)
+        .then(function (eventData) {
+          for (let index = 0; index < data.length; index++) {
+            participantNotifs.push({
+              user_push_token: data[index].user_push_token,
+              user_id: data[index].user_id,
+              message_type: event.reason_for_update,
+              data_type: event.data_name,
+              data_value: eventData
+            });
+          }
+          db
+            .result('delete from Events where event_id = ${event_id}', event)
+            .then(function (result) {
+              /* jshint ignore:start */
+              res.status(200).json({
+                status: "success",
+                message: `Removed ${result.rowCount} Event`
+              });
+              sendNotifications(participantNotifs);
+            })
+          /* jshint ignore:end */
+        })
     })
     .catch(function (err) {
       return next(err);

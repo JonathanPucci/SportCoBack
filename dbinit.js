@@ -132,7 +132,7 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                   .then(() => {
                     createUser("Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture", 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]').then(() => {
                       createUser("Omar", "Omar@blabbla.com").then(() => {
-                        createUser("TestUser Doe", "testuser_rsmbxey_doe@tfbnw.net",'https://graph.facebook.com/106377624362030/picture').then(() => {
+                        createUser("TestUser Doe", "testuser_rsmbxey_doe@tfbnw.net", 'https://graph.facebook.com/106377624362030/picture').then(() => {
                           createUser("Quentin", "Quentin@blabbla.com").then(() => {
                             createUserStats(1).then(() => {
                               createUserStats(2).then(() => {
@@ -183,13 +183,13 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                                                 createEventParticipant("1", "1").then(() => {
                                                   createEventParticipant("3", "1").then(() => {
                                                     createFieldSpot("basket", "1").then(() => {
-                                                    createFieldSpot("futsal", "2").then(() => {
-                                                      createFieldSpot("basket", "3")
+                                                      createFieldSpot("futsal", "2").then(() => {
+                                                        createFieldSpot("basket", "3")
+                                                      });
                                                     });
                                                   });
                                                 });
                                               });
-                                            });
                                             });
                                           });
                                         });
@@ -214,25 +214,25 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
 
 
 sendNotifications([{
-  user_push_token : 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
-  user_id : 1,
-  message_type : 'EVENT_CHANGED',
+  user_push_token: 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
+  user_id: 1,
+  message_type: 'EVENT_CHANGED',
   data_type: 'event_id',
-  data_value : 3
+  data_value: 3
 }])
 
 sendNotifications([{
-  user_push_token : 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
-  user_id : 1,
-  message_type : 'NEW_EVENT',
+  user_push_token: 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
+  user_id: 1,
+  message_type: 'NEW_EVENT',
   data_type: 'event_id',
-  data_value : 4
+  data_value: 4
 }])
 
 sendNotifications([{
-  user_push_token : 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
-  user_id : 1,
-  message_type : 'EVENT_CANCELED',
-  data_type: 'event_id',
-  data_value : 2
+  user_push_token: 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]',
+  user_id: 1,
+  message_type: 'EVENT_CANCELED',
+  data_type: 'event',
+  data_value: { "event_id": 3, "description": "Session de foot à 5 en salle", "photo": "photo", "date": "2017-12-31T23:00:00.000Z", "host_id": "3", "spot_id": "2", "participants_min": 0, "participants_max": 5, "sport": "futsal" }
 }])
