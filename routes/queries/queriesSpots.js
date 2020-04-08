@@ -19,7 +19,7 @@ function getAllSpots(req, res, next) {
 function getSingleSpot(req, res, next) {
   var eventID = parseInt(req.params.id);
   db
-    .one('select * from Spots where Spot_ID = $1', eventID)
+    .one('select * from Spots where spot_id = $1', eventID)
     .then(function (data) {
       res.status(200).json({
         status: "success",
@@ -69,7 +69,7 @@ function createSpot(req, res, next) {
       res.status(200).json({
         status: "success",
         message: "Inserted one Spot",
-        data : {spot_id : data[0].user_id}
+        data: { spot_id: data[0].user_id }
       });
     })
     .catch(function (err) {
@@ -81,11 +81,12 @@ function createSpot(req, res, next) {
 function updateSpot(req, res, next) {
   db
     .none(
-      'update Spots set spot_longitude=$2,spot_latitude=$3 where Spot_ID=$1',
+      'update Spots set spot_longitude=$2,spot_latitude=$3,spot_name=$4 where spot_id=$1',
       [
-        req.body.Spot_ID,
+        req.body.spot_id,
         req.body.spot_longitude,
         req.body.spot_latitude,
+        req.body.spot_name,
       ]
     )
     .then(function () {
@@ -102,7 +103,7 @@ function updateSpot(req, res, next) {
 function removeSpot(req, res, next) {
   var spot = JSON.parse(req.params.spot);
   db
-    .result('delete from Spots where Spot_ID= ${Spot_ID}', spot)
+    .result('delete from Spots where spot_id= ${spot_id}', spot)
     .then(function (result) {
       /* jshint ignore:start */
       res.status(200).json({

@@ -85,8 +85,9 @@ CREATE TABLE EventParticipants (
 );
 
 CREATE TABLE FieldSpots (
-	Spot_ID serial NOT NULL,
-	Field TEXT NOT NULL
+	Spot_ID bigint NOT NULL,
+	Field TEXT NOT NULL,
+	UNIQUE (Spot_ID,Field)
 ) WITH (
   OIDS=FALSE
 );

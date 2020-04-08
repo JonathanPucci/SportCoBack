@@ -19,7 +19,7 @@ function getAllFieldSpots(req, res, next) {
 function getFieldsOfSpot(req, res, next) {
   var spotID = parseInt(req.params.id);
   db
-    .one('select * from FieldSpots where Spot_ID = $1', spotID)
+    .any('select * from FieldSpots where spot_id = $1', spotID)
     .then(function(data) {
       res.status(200).json({
         status: "success",
@@ -35,8 +35,8 @@ function getFieldsOfSpot(req, res, next) {
 function createFieldSpot(req, res, next) {
   db
     .none(
-      'insert into FieldSpots(Spot_ID,Field)' +
-        "values(${Spot_ID},${Field})",
+      'insert into FieldSpots(spot_id,Field)' +
+        "values(${spot_id},${field})",
       req.body
     )
     .then(function() {
@@ -56,7 +56,7 @@ function removeFieldSpot(req, res, next) {
 
   db
     .result(
-      'delete from FieldSpots where Field= ${Field} AND Spot_ID= ${Spot_ID}',
+      'delete from FieldSpots where Field= ${field} AND spot_id= ${spot_id}',
       fieldspot
     )
     .then(function(result) {
