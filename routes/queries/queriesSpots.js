@@ -69,7 +69,7 @@ function createSpot(req, res, next) {
       res.status(200).json({
         status: "success",
         message: "Inserted one Spot",
-        data: { spot_id: data[0].user_id }
+        data: { spot_id: data[0].spot_id }
       });
     })
     .catch(function (err) {
