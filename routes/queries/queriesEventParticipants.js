@@ -35,7 +35,7 @@ function getParticipantsOfEvent(req, res, next) {
 function getEventsOfParticipant(req, res, next) {
   var user_id = parseInt(req.params.id);
   db
-    .one('select * from EventParticipants where user_id = $1', user_id)
+    .any('select * from EventParticipants INNER JOIN Events ON EventParticipants.event_id = Events.event_id where EventParticipants.user_id = $1', user_id)
     .then(function(data) {
       res.status(200).json({
         status: "success",
