@@ -52,7 +52,7 @@ function getSingleUserByEmail(req, res, next) {
   var email = req.params.id;
 
   db
-    .one('select * from Users where Email = $1', email)
+    .one('select * from Users where email = $1', email)
     .then(function (data) {
       res.status(200).json({
         status: "success",
@@ -68,7 +68,7 @@ function getSingleUserByEmail(req, res, next) {
 
 function createUser(req, res, next) {
   return db
-    .one('insert into Users(user_id,User_Name,Email,Photo_url) values(DEFAULT,${user_name},${email},${photo_url}) RETURNING user_id', req.body)
+    .one('insert into Users(user_id,user_name,email,photo_url) values(DEFAULT,${user_name},${email},${photo_url}) RETURNING user_id', req.body)
     .then((data) => {
       res.status(200).json({
         status: "success",
@@ -86,11 +86,12 @@ function createUser(req, res, next) {
 
 function updateUser(req, res, next) {
   db
-    .none('update Users set User_Name=$1, Email=$2, Photo_url=$3 where user_id=$4', [
-      req.body.User_Name,
-      req.body.Email,
-      req.body.Photo_url,
-      req.body.user_id
+    .none('update Users set user_name=$1, email=$2, photo_url=$3, user_push_token=$5 where user_id=$4', [
+      req.body.user_name,
+      req.body.email,
+      req.body.photo_url,
+      req.body.user_id,
+      req.body.user_push_token
     ])
     .then(function () {
       res.status(200).json({
@@ -105,7 +106,7 @@ function updateUser(req, res, next) {
 
 function updateUserByEmail(req, res, next) {
   db
-    .none('update Users set User_Name=$1, Photo_url=$3 where Email=$2', [
+    .none('update Users set user_name=$1, photo_url=$3 where email=$2', [
       req.body.user_name,
       req.body.email,
       req.body.photo_url
