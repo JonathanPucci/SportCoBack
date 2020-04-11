@@ -181,10 +181,14 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                                                 "basket"
                                               ).then(() => {
                                                 createEventParticipant("1", "1").then(() => {
-                                                  createEventParticipant("3", "1").then(() => {
-                                                    createFieldSpot("basket", "1").then(() => {
-                                                      createFieldSpot("futsal", "2").then(() => {
-                                                        createFieldSpot("basket", "3")
+                                                  createEventParticipant("1", "2").then(() => {
+                                                    createEventParticipant("1", "3").then(() => {
+                                                      createEventParticipant("3", "1").then(() => {
+                                                        createFieldSpot("basket", "1").then(() => {
+                                                          createFieldSpot("futsal", "2").then(() => {
+                                                            createFieldSpot("basket", "3")
+                                                          });
+                                                        });
                                                       });
                                                     });
                                                   });
