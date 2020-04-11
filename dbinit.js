@@ -55,6 +55,29 @@ function createEventParticipant(eid, uid) {
     });
 }
 
+
+function createEventComment(eid, uid, date, text) {
+  let ec = {
+    User_ID: uid,
+    Event_ID: eid,
+    comment_text: text,
+    date: date
+  };
+  return db
+    .none(
+      'insert into EventComments(User_ID,Event_ID,date,comment_text)' +
+      "values(${User_ID},${Event_ID},${date},${comment_text})",
+      ec
+    )
+    .then(function () {
+      console.log("added eventcomment");
+    })
+    .catch(function (err) {
+      console.log("error while adding eventcomment" + err);
+    });
+}
+
+
 function createFieldSpot(field, spid) {
   let fs = {
     Field: field,
@@ -184,12 +207,18 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                                                   createEventParticipant("1", "2").then(() => {
                                                     createEventParticipant("1", "3").then(() => {
                                                       createEventParticipant("3", "1").then(() => {
-                                                        createFieldSpot("basket", "1").then(() => {
-                                                          createFieldSpot("futsal", "2").then(() => {
-                                                            createFieldSpot("basket", "3")
+                                                        createEventComment("1", "1", new Date(), 'my first comment here').then(() => {
+                                                          let d = new Date();
+                                                          d.setMinutes(d.getMinutes()-10);
+                                                          createEventComment("1", "2", d , 'blablablablablablablabalkbalablabla').then(() => {
+                                                          createFieldSpot("basket", "1").then(() => {
+                                                            createFieldSpot("futsal", "2").then(() => {
+                                                              createFieldSpot("basket", "3")
+                                                            });
                                                           });
                                                         });
                                                       });
+                                                    });
                                                     });
                                                   });
                                                 });

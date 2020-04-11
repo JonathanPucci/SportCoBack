@@ -64,6 +64,16 @@ CREATE TABLE Events (
   OIDS=FALSE
 );
 
+CREATE TABLE EventComments (
+	event_id bigint NOT NULL,
+	comment_text TEXT NOT NULL,
+	date timestamp NOT NULL,
+	user_id bigint NOT NULL,
+	CONSTRAINT EventComments_pk PRIMARY KEY (event_id,date,user_id)
+) WITH (
+  OIDS=FALSE
+);
+
 
 
 CREATE TABLE Spots (
@@ -96,9 +106,11 @@ CREATE TABLE FieldSpots (
 
 
 ALTER TABLE UserStats ADD CONSTRAINT UserStats_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
-ALTER TABLE UserPushNotifications ADD CONSTRAINT UserPushNotifications_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id);
+ALTER TABLE UserPushNotifications ADD CONSTRAINT UserPushNotifications_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk0 FOREIGN KEY (Host_ID) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;
+ALTER TABLE EventComments ADD CONSTRAINT EventComments_fk1 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
+ALTER TABLE EventComments ADD CONSTRAINT EventComments_fk2 FOREIGN KEY (event_id) REFERENCES Events(event_id) ON DELETE CASCADE;
 ALTER TABLE FieldSpots ADD CONSTRAINT FieldSpots_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;
 ALTER TABLE EventParticipants ADD CONSTRAINT EventParticipants_fk0 FOREIGN KEY (event_id) REFERENCES Events(event_id) ON DELETE CASCADE;
 ALTER TABLE EventParticipants ADD CONSTRAINT EventParticipants_fk1 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;

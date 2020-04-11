@@ -51,18 +51,23 @@ function getSingleEvent(req, res, next) {
             .any('select * from EventParticipants INNER JOIN Users ON  EventParticipants.user_id = Users.user_id where EventParticipants.event_id = $1', eventID)
             .then(function (participantsData) {
               db
-                .one('select * from Spots where spot_id = $1', eventsData.spot_id)
-                .then(function (spotsData) {
-                  res.status(200).json({
-                    status: "success",
-                    data: {
-                      event: eventsData,
-                      host: hostData,
-                      participants: participantsData,
-                      spot: spotsData
-                    },
-                    message: "Retrieved ONE Event"
-                  });
+                .any('select * from EventComments INNER JOIN Users ON  EventComments.user_id = Users.user_id where event_id = $1', eventID)
+                .then(function (commentsData) {
+                  db
+                    .one('select * from Spots where spot_id = $1', eventsData.spot_id)
+                    .then(function (spotsData) {
+                      res.status(200).json({
+                        status: "success",
+                        data: {
+                          event: eventsData,
+                          host: hostData,
+                          participants: participantsData,
+                          comments: commentsData,
+                          spot: spotsData
+                        },
+                        message: "Retrieved ONE Event"
+                      });
+                    })
                 })
             })
         })
