@@ -48,7 +48,7 @@ function getSingleEvent(req, res, next) {
         .one('select * from Users where User_ID = $1', eventsData.host_id)
         .then(function (hostData) {
           db
-            .any('select * from EventParticipants INNER JOIN Users ON  EventParticipants.user_id = Users.user_id where EventParticipants.event_id = $1', eventID)
+            .any('select * from EventParticipants INNER JOIN Users ON  EventParticipants.user_id = Users.user_id INNER JOIN Userstats ON  EventParticipants.user_id = Userstats.user_id where EventParticipants.event_id = $1', eventID)
             .then(function (participantsData) {
               db
                 .any('select * from EventComments INNER JOIN Users ON  EventComments.user_id = Users.user_id where event_id = $1', eventID)

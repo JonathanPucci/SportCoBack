@@ -27,34 +27,42 @@ function getSingleUserStats(req, res, next) {
           basket : {
             created : data.basket_created,
             joined : data.basket_joined,
+            level : data.basket_level,
           },
           tennis : {
             created : data.tennis_created,
             joined : data.tennis_joined,
+            level : data.tennis_level,
           },
           soccer : {
             created : data.soccer_created,
             joined : data.soccer_joined,
+            level : data.soccer_level,
           },
           futsal : {
             created : data.futsal_created,
             joined : data.futsal_joined,
+            level : data.futsal_level,
           },
           beachvolley : {
             created : data.beachvolley_created,
             joined : data.beachvolley_joined,
+            level : data.beachvolley_level,
           },
           volley : {
             created : data.volley_created,
             joined : data.volley_joined,
+            level : data.volley_level,
           },
           workout : {
             created : data.workout_created,
             joined : data.workout_joined,
+            level : data.workout_level,
           },
           running : {
             created : data.running_created,
             joined : data.running_joined,
+            level : data.running_level,
           }
         },
         message: "Retrieved ONE UserStat"
@@ -96,6 +104,25 @@ function updateUserStats(req, res, next) {
     });
 }
 
+function updateUserLevel(req, res, next) {
+  db
+    .none("update UserStats set $1~= $2 where user_id = $3", [
+      req.body.sport_level,
+      req.body.level,
+      req.body.user_id
+    ])
+    .then(function () {
+      res.status(200).json({
+        status: "success",
+        message: "Updated UserStat"
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+      return next(err);
+    });
+}
+
 function removeUserStats(req, res, next) {
   var userStat = JSON.parse(req.params.userStat);
 
@@ -119,5 +146,6 @@ module.exports = {
   getSingleUserStats: getSingleUserStats,
   createUserStats: createUserStats,
   updateUserStats: updateUserStats,
+  updateUserLevel:updateUserLevel,
   removeUserStats: removeUserStats
 };
