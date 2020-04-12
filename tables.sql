@@ -1,3 +1,5 @@
+CREATE TYPE sport AS ENUM ('basket', 'soccer', 'futsal', 'workout', 'running', 'volley', 'beachvolley', 'tennis');
+CREATE TYPE sport_level AS ENUM ('first time', 'beginner', 'intermediate', 'advanced', 'pro');
 
 
 CREATE TABLE Users (
@@ -58,7 +60,8 @@ CREATE TABLE Events (
 	Spot_ID bigint NOT NULL,
 	Participants_min int NOT NULL,
 	Participants_max int NOT NULL,
-	Sport TEXT NOT NULL,
+	Sport sport NOT NULL,
+	sport_level sport_level NOT NULL DEFAULT 'intermediate', 
 	CONSTRAINT Events_pk PRIMARY KEY (event_id)
 ) WITH (
   OIDS=FALSE
