@@ -1,5 +1,18 @@
+DROP TABLE Users CASCADE;
+DROP TABLE UserStats CASCADE;
+DROP TABLE UserPushNotifications CASCADE;
+DROP TABLE EventComments CASCADE;
+DROP TABLE EventParticipants CASCADE;
+DROP TABLE Events CASCADE;
+DROP TABLE FieldSpots CASCADE;
+DROP TABLE Spots CASCADE;
+
+
+
+
 CREATE TYPE sport AS ENUM ('basket', 'soccer', 'futsal', 'workout', 'running', 'volley', 'beachvolley', 'tennis');
 CREATE TYPE sport_level AS ENUM ('first time', 'beginner', 'intermediate', 'advanced', 'pro');
+CREATE TYPE visibility AS ENUM ('public','private');
 
 
 CREATE TABLE Users (
@@ -70,6 +83,7 @@ CREATE TABLE Events (
 	Participants_max int NOT NULL,
 	Sport sport NOT NULL,
 	sport_level sport_level NOT NULL DEFAULT 'intermediate', 
+	visibility visibility NOT NULL DEFAULT 'public',
 	CONSTRAINT Events_pk PRIMARY KEY (event_id)
 ) WITH (
   OIDS=FALSE

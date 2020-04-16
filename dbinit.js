@@ -145,80 +145,76 @@ function createSpot(name, lla, llo) {
 
 db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
   .then(() => {
-    db.none('ALTER SEQUENCE fieldspots_spot_id_seq RESTART; ')
+    db.none('ALTER SEQUENCE spots_spot_id_seq RESTART; ')
       .then(() => {
-        db.none('ALTER SEQUENCE spots_spot_id_seq RESTART; ')
+        db.none('ALTER SEQUENCE users_user_id_seq RESTART; ')
           .then(() => {
-            db.none('ALTER SEQUENCE users_user_id_seq RESTART; ')
+            db.none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
               .then(() => {
-                db.none('TRUNCATE Users, Events, Spots,EventParticipants CASCADE')
-                  .then(() => {
-                    createUser("Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture", 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]').then(() => {
-                      createUser("Omar", "Omar@blabbla.com").then(() => {
-                        createUser("TestUser Doe", "testuser_rsmbxey_doe@tfbnw.net", 'https://graph.facebook.com/106377624362030/picture').then(() => {
-                          createUser("Quentin", "Quentin@blabbla.com").then(() => {
-                            createUserStats(1).then(() => {
-                              createUserStats(2).then(() => {
-                                createUserStats(3).then(() => {
-                                  createSpot('Stade Fort Carré', "43.591317", "7.124781").then(() => {
-                                    createSpot('SpotFutsal', "43.5965538", "7.0980908").then(() => {
-                                      createSpot('Stade Foch', "43.5769976", "7.1206588").then(() => {
+                createUser("Jon", "jon.p@hotmail.fr", "https://graph.facebook.com/3147119735300212/picture", 'ExponentPushToken[rE0inYEYxPzyB9CkxMxDmx]').then(() => {
+                  createUser("Omar", "Omar@blabbla.com").then(() => {
+                    createUser("TestUser Doe", "testuser_rsmbxey_doe@tfbnw.net", 'https://graph.facebook.com/106377624362030/picture').then(() => {
+                      createUser("Quentin", "Quentin@blabbla.com").then(() => {
+                        createUserStats(1).then(() => {
+                          createUserStats(2).then(() => {
+                            createUserStats(3).then(() => {
+                              createSpot('Stade Fort Carré', "43.591317", "7.124781").then(() => {
+                                createSpot('SpotFutsal', "43.5965538", "7.0980908").then(() => {
+                                  createSpot('Stade Foch', "43.5769976", "7.1206588").then(() => {
+                                    createEvent(
+                                      "Session de foot à 8 au Fort Carré",
+                                      "photo",
+                                      "01/01/2018",
+                                      "1",
+                                      "1",
+                                      "0",
+                                      "10",
+                                      "soccer"
+                                    ).then(() => {
+                                      createEvent(
+                                        "Ptit futsal au Fort Carré",
+                                        "photo",
+                                        "01/01/2020",
+                                        "1",
+                                        "1",
+                                        "0",
+                                        "10",
+                                        "futsal"
+                                      ).then(() => {
                                         createEvent(
-                                          "Session de foot à 8 au Fort Carré",
+                                          "Session de foot à 5 en salle",
                                           "photo",
                                           "01/01/2018",
-                                          "1",
-                                          "1",
+                                          "3",
+                                          "2",
                                           "0",
-                                          "10",
-                                          "soccer"
+                                          "5",
+                                          "futsal"
                                         ).then(() => {
                                           createEvent(
-                                            "Ptit futsal au Fort Carré",
+                                            "Session de basket sur le terrain Foch",
                                             "photo",
-                                            "01/01/2020",
+                                            "01/01/2018",
                                             "1",
-                                            "1",
+                                            "3",
                                             "0",
-                                            "10",
-                                            "futsal"
+                                            "8",
+                                            "basket"
                                           ).then(() => {
-                                            createEvent(
-                                              "Session de foot à 5 en salle",
-                                              "photo",
-                                              "01/01/2018",
-                                              "3",
-                                              "2",
-                                              "0",
-                                              "5",
-                                              "futsal"
-                                            ).then(() => {
-                                              createEvent(
-                                                "Session de basket sur le terrain Foch",
-                                                "photo",
-                                                "01/01/2018",
-                                                "1",
-                                                "3",
-                                                "0",
-                                                "8",
-                                                "basket"
-                                              ).then(() => {
-                                                createEventParticipant("1", "1").then(() => {
-                                                  createEventParticipant("1", "2").then(() => {
-                                                    createEventParticipant("1", "3").then(() => {
-                                                      createEventParticipant("3", "1").then(() => {
-                                                        createEventComment("1", "1", new Date(), 'my first comment here').then(() => {
-                                                          let d = new Date();
-                                                          d.setMinutes(d.getMinutes()-10);
-                                                          createEventComment("1", "2", d , 'blablablablablablablabalkbalablabla').then(() => {
-                                                          createFieldSpot("basket", "1").then(() => {
-                                                            createFieldSpot("futsal", "2").then(() => {
-                                                              createFieldSpot("basket", "3")
-                                                            });
+                                            createEventParticipant("1", "1").then(() => {
+                                              createEventParticipant("1", "2").then(() => {
+                                                createEventParticipant("1", "3").then(() => {
+                                                  createEventParticipant("3", "1").then(() => {
+                                                    createEventComment("1", "1", new Date(), 'my first comment here').then(() => {
+                                                      let d = new Date();
+                                                      d.setMinutes(d.getMinutes() - 10);
+                                                      createEventComment("1", "2", d, 'blablablablablablablabalkbalablabla').then(() => {
+                                                        createFieldSpot("basket", "1").then(() => {
+                                                          createFieldSpot("futsal", "2").then(() => {
+                                                            createFieldSpot("basket", "3")
                                                           });
                                                         });
                                                       });
-                                                    });
                                                     });
                                                   });
                                                 });
@@ -237,6 +233,7 @@ db.none('ALTER SEQUENCE events_event_id_seq RESTART; ')
                       });
                     });
                   });
+                });
               });
           });
       })

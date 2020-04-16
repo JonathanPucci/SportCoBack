@@ -80,8 +80,8 @@ function getSingleEvent(req, res, next) {
 function createEvent(req, res, next) {
   db
     .any(
-      'insert into Events( event_id,description, photo, date, host_id, spot_id, participants_min, participants_max, sport,sport_level)' +
-      "values( DEFAULT, ${ description}, ${ photo}, ${ date}, ${ host_id}, ${ spot_id}, ${ participants_min}, ${ participants_max}, ${ sport}, ${sport_level}) RETURNING event_id",
+      'insert into Events( event_id,description, photo, date, host_id, spot_id, participants_min, participants_max, sport,sport_level, visibility)' +
+      "values( DEFAULT, ${ description}, ${ photo}, ${ date}, ${ host_id}, ${ spot_id}, ${ participants_min}, ${ participants_max}, ${ sport}, ${sport_level}, ${visibility}) RETURNING event_id",
       req.body
     )
     .then(function (data) {
@@ -104,7 +104,7 @@ function createEvent(req, res, next) {
 function updateEvent(req, res, next) {
   db
     .none(
-      'update Events set description=${ description}, photo=${ photo}, date=${ date}, host_id=${ host_id}, spot_id=${ spot_id}, participants_min=${ participants_min}, participants_max=${ participants_max}, sport=${ sport}, sport_level=${sport_level} where event_id=${event_id} ',
+      'update Events set description=${ description}, photo=${ photo}, date=${ date}, host_id=${ host_id}, spot_id=${ spot_id}, participants_min=${ participants_min}, participants_max=${ participants_max}, sport=${ sport}, sport_level=${sport_level}, visibility=${visibility} where event_id=${event_id} ',
       req.body
     )
     .then(function () {
