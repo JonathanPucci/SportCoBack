@@ -86,10 +86,10 @@ function createUser(req, res, next) {
 
 function updateUser(req, res, next) {
   db
-    .none('update Users set user_name=$1, email=$2, photo_url=$3, user_push_token=$5 where user_id=$4', [
+    .none('update Users set email=$2, photo_url=$3, user_push_token=$5 where user_id=$4', [
       req.body.user_name,
       req.body.email,
-      req.body.photo_url,
+      req.body.photoURL,
       req.body.user_id,
       req.body.user_push_token
     ])

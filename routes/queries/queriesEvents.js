@@ -80,8 +80,8 @@ function getSingleEvent(req, res, next) {
 function createEvent(req, res, next) {
   db
     .any(
-      'insert into Events( event_id,description, photo, date, host_id, spot_id, participants_min, participants_max, sport,sport_level, visibility)' +
-      "values( DEFAULT, ${ description}, ${ photo}, ${ date}, ${ host_id}, ${ spot_id}, ${ participants_min}, ${ participants_max}, ${ sport}, ${sport_level}, ${visibility}) RETURNING event_id",
+      'insert into Events( event_id,description, date, host_id, spot_id, participants_min, participants_max, sport,sport_level, visibility)' +
+      "values( DEFAULT, ${ description}, ${ date}, ${ host_id}, ${ spot_id}, ${ participants_min}, ${ participants_max}, ${ sport}, ${sport_level}, ${visibility}) RETURNING event_id",
       req.body
     )
     .then(function (data) {
