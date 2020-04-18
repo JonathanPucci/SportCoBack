@@ -43,6 +43,7 @@ function getSingleSpotByCoordinates(req, res, next) {
   db
     .any("select * from spots WHERE spots.spot_longitude BETWEEN ${longitude_min} AND ${longitude_max} AND spots.spot_latitude BETWEEN ${latitude_min} AND ${latitude_max};", area)
     .then(function (data) {
+
       res.status(200).json({
         status: "success",
         data: data,
@@ -57,7 +58,6 @@ function getSingleSpotByCoordinates(req, res, next) {
 }
 
 function createSpot(req, res, next) {
-  console.log(req.body);
   db
     .any(
       'insert into Spots(spot_id,spot_name,spot_longitude,spot_latitude)' +
@@ -65,12 +65,12 @@ function createSpot(req, res, next) {
       req.body
     )
     .then(function (data) {
-      console.log(data);
       res.status(200).json({
         status: "success",
         message: "Inserted one Spot",
         data: { spot_id: data[0].spot_id }
       });
+      console.log("added new event : " + data[0].spot_id);
     })
     .catch(function (err) {
       console.log(err);

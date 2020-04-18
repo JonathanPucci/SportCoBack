@@ -104,8 +104,8 @@ CREATE TABLE EventComments (
 CREATE TABLE Spots (
 	Spot_ID serial NOT NULL,
 	Spot_name TEXT,
-	Spot_longitude TEXT NOT NULL,
-	Spot_latitude TEXT NOT NULL,
+	Spot_longitude decimal NOT NULL,
+	Spot_latitude decimal NOT NULL,
 	CONSTRAINT Spots_pk PRIMARY KEY (Spot_ID)
 ) WITH (
   OIDS=FALSE

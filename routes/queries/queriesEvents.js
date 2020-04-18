@@ -20,10 +20,10 @@ function getAllEvents(req, res, next) {
 function getAllEventsInArea(req, res, next) {
   let areaSelected = req.body;
   let area = {
-    latitude_min: (areaSelected.latitude - areaSelected.latitudeDelta / 2).toString(),
-    latitude_max: (areaSelected.latitude + areaSelected.latitudeDelta / 2).toString(),
-    longitude_min: (areaSelected.longitude - areaSelected.longitudeDelta / 2).toString(),
-    longitude_max: (areaSelected.longitude + areaSelected.longitudeDelta / 2).toString(),
+    latitude_min: (areaSelected.latitude - (areaSelected.latitudeDelta / 2)),
+    latitude_max: (areaSelected.latitude + (areaSelected.latitudeDelta / 2)),
+    longitude_min: (areaSelected.longitude - (areaSelected.latitudeDelta / 2)),
+    longitude_max: (areaSelected.longitude + (areaSelected.latitudeDelta / 2)),
   }
   db
     .any("select * from events INNER JOIN spots ON spots.spot_id = events.spot_id WHERE spots.spot_longitude BETWEEN ${longitude_min} AND ${longitude_max} AND spots.spot_latitude BETWEEN ${latitude_min} AND ${latitude_max};", area)
@@ -78,10 +78,11 @@ function getSingleEvent(req, res, next) {
 }
 
 function createEvent(req, res, next) {
+  console.log(req.body);
   db
     .any(
       'insert into Events( event_id,description, date, host_id, spot_id, participants_min, participants_max, sport,sport_level, visibility)' +
-      "values( DEFAULT, ${ description}, ${ date}, ${ host_id}, ${ spot_id}, ${ participants_min}, ${ participants_max}, ${ sport}, ${sport_level}, ${visibility}) RETURNING event_id",
+      "values( DEFAULT, ${description}, ${date}, ${host_id}, ${spot_id}, ${participants_min}, ${participants_max}, ${sport}, ${sport_level}, ${visibility}) RETURNING event_id",
       req.body
     )
     .then(function (data) {
@@ -104,7 +105,7 @@ function createEvent(req, res, next) {
 function updateEvent(req, res, next) {
   db
     .none(
-      'update Events set description=${ description}, photo=${ photo}, date=${ date}, host_id=${ host_id}, spot_id=${ spot_id}, participants_min=${ participants_min}, participants_max=${ participants_max}, sport=${ sport}, sport_level=${sport_level}, visibility=${visibility} where event_id=${event_id} ',
+      'update Events set description=${description}, photo=${photo}, date=${date}, host_id=${host_id}, spot_id=${spot_id}, participants_min=${participants_min}, participants_max=${participants_max}, sport=${sport}, sport_level=${sport_level}, visibility=${visibility} where event_id=${event_id} ',
       req.body
     )
     .then(function () {
