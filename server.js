@@ -12,7 +12,7 @@ var server_ip_address =
 
 const mountRoutes = require("./routes");
 
-var initdb = require("./dbinit");
+// var initdb = require("./dbinit");
 
 mountRoutes(app);
 app.get("/", function(req, res) {
