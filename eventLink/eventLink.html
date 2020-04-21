@@ -7,14 +7,19 @@
         var event_id = "<%=event_id%>";
         let basis_url = 'sportcoapp://event_link='
         var url = '';
+
         if (os == 'iOS')
             url = basis_url
         else
-            url = 'http://' + basis_url
-         url += event_id ;
-        var a = document.getElementById('myLink'); //or grab it by tagname etc
-        console.log(a);
-         a.setAttribute("href", url);
+            url = 'http:///' + basis_url
+        url += event_id;
+        var aEl = document.getElementById('myLink'); //or grab it by tagname etc
+        var osEl = document.getElementById('os'); //or grab it by tagname etc
+        var urlEl = document.getElementById('url'); //or grab it by tagname etc
+        console.log(aEl);
+        aEl.setAttribute("href", url);
+        osEl.appendChild( document.createTextNode(os) );
+        urlEl.appendChild( document.createTextNode(url) );
     }
 
 </script>
@@ -27,4 +32,6 @@
             </h1>
         </a>
     </div>
+    <span id="os"></span>
+    <span id="url"></span>
 </div>
