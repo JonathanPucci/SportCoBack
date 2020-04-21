@@ -40,6 +40,7 @@
     "bootstrap": "^3.3.7",
     "concurrently": "^3.5.1",
     "core-js": "^2.4.1",
+    "ejs": "^3.0.2",
     "expo-server-sdk": "^3.5.0",
     "express": "^4.16.2",
     "express-async-await": "^1.1.0",

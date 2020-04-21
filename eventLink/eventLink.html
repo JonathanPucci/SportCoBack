@@ -1,0 +1,30 @@
+<link rel="stylesheet" type="text/css" href="/eventLink.css">
+<script src="/eventLink.js"></script>
+<script>
+
+    window.onload = function () {
+        let os = getMobileOperatingSystem();
+        var event_id = "<%=event_id%>";
+        let basis_url = 'sportcoapp://event_link='
+        var url = '';
+        if (os == 'iOS')
+            url = basis_url
+        else
+            url = 'http://' + basis_url
+         url += event_id ;
+        var a = document.getElementById('myLink'); //or grab it by tagname etc
+        console.log(a);
+         a.setAttribute("href", url);
+    }
+
+</script>
+
+<div class="wrapper">
+    <div class="card">
+        <a id="myLink" href=''>
+            <h1>
+                <span class="enclosed">Go To</span>Event
+            </h1>
+        </a>
+    </div>
+</div>

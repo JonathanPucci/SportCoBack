@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 const path = require("path");
-
+app.engine('html', require('ejs').renderFile);
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 // setup ports
@@ -17,6 +17,19 @@ const mountRoutes = require("./routes");
 mountRoutes(app);
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/index.html");
+});
+
+
+app.use(express.static(__dirname + '/eventLink'));
+
+
+// const eventLinkRouter = require("./eventLink");
+// eventLinkRouter(app);
+app.get('/eventLink/:id', function(req, res) {
+  var event_id = req.params.id;
+
+  res.render(__dirname + "/eventLink/eventLink.html", {event_id:event_id});
+
 });
 
 // server listens in on port
