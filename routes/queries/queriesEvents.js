@@ -1,5 +1,6 @@
 var db = require("../../dbconnection").db;
 var sendNotifications = require("../../notifications/notifications").sendNotifications;
+var sendNotifToUserWithToken = require("../../notifications/firebaseNotifications").sendNotifToUserWithToken;
 
 // add query functions
 function getAllEvents(req, res, next) {
@@ -114,19 +115,25 @@ function updateEvent(req, res, next) {
         message: "Updated Event"
       });
       db.any('select users.user_id,user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', req.body).then((data) => {
-        let participantNotifs = [];
-
         for (let index = 0; index < data.length; index++) {
-          console.log(data[index]);
-          participantNotifs.push({
-            user_push_token: data[index].user_push_token,
-            user_id: data[index].user_id,
+          // console.log(data[index]);
+          //   participantNotifs.push({
+          //     user_push_token: data[index].user_push_token,
+          //     user_id: data[index].user_id,
+          //     message_type: req.body.reason_for_update,
+          //     data_type: req.body.data_name,
+          //     data_value: req.body.event_id
+          //   });
+          let user = { user_id: data[index].user_id };
+          let notif = {
             message_type: req.body.reason_for_update,
             data_type: req.body.data_name,
             data_value: req.body.event_id
-          });
+          }
+          let token = data[index].user_push_token;
+          sendNotifToUserWithToken(notif, user, token);
         }
-        sendNotifications(participantNotifs);
+        // sendNotifications(participantNotifs);
 
       })
     })

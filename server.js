@@ -27,10 +27,14 @@ app.use(express.static(__dirname + '/eventLink'));
 // eventLinkRouter(app);
 app.get('/eventLink/:id', function(req, res) {
   var event_id = req.params.id;
-
   res.render(__dirname + "/eventLink/eventLink.html", {event_id:event_id});
-
 });
+
+app.get('/privacy/', function(req, res) {
+  res.render(__dirname + "/PrivacyPolicy.html");
+});
+
+const firebaseNotifs = require("./notifications/firebaseNotifications");
 
 // server listens in on port
 app.listen(server_port, server_ip_address, function() {
