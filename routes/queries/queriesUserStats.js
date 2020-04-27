@@ -88,11 +88,10 @@ function createUserStats(req, res, next) {
 }
 
 function updateUserStats(req, res, next) {
+  let operation = req.body.adding ? '+1' : '-1';
+  let request = 'update UserStats set ' + req.body.statToUpdate + '=' + req.body.statToUpdate + operation + ' where user_id = ' + req.body.user_id;
   db
-    .none('update UserStats set $1~=($1~+1) where user_id = $2', [
-      req.body.statToUpdate,
-      req.body.user_id
-    ])
+    .none(request)
     .then(function () {
       res.status(200).json({
         status: "success",
@@ -100,6 +99,7 @@ function updateUserStats(req, res, next) {
       });
     })
     .catch(function (err) {
+      console.log(err)
       return next(err);
     });
 }

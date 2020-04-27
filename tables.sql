@@ -18,6 +18,8 @@ CREATE TYPE visibility AS ENUM ('public','private');
 CREATE TABLE Users (
 	user_id serial NOT NULL,
 	User_Name TEXT NOT NULL,
+	user_title TEXT DEFAULT 'Who cares?',
+	user_description TEXT DEFAULT 'Oh yeah',
 	Email VARCHAR(255) NOT NULL UNIQUE,
 	Photo_url VARCHAR(255),
 	user_push_token VARCHAR(255) UNIQUE,
@@ -65,6 +67,7 @@ CREATE TABLE UserPushNotifications (
 	message_type VARCHAR(255),
 	data_type VARCHAR(255),
 	data_value VARCHAR(255),
+	data_value2 VARCHAR(255),
 	CONSTRAINT user_id_key_notif PRIMARY KEY (user_id,date)
 ) WITH (
   OIDS=FALSE

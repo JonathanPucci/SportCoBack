@@ -32,6 +32,7 @@ admin.initializeApp({
         date: JSON.stringify((new Date()).toJSON()),
         data_type: notif.data_type.toString(),
         data_value: notif.data_value.toString(),
+        data_value2: notif.data_value2 != undefined? notif.data_value2.toString() : '',
         message_type_app_key: notif.message_type.toString()
     }
     var messageData = {
@@ -48,8 +49,8 @@ admin.initializeApp({
         console.log('Successfully sent message:', response);
 
         var db = require("../dbconnection").db;
-        db.none('insert into UserPushNotifications(user_id,date,message_type,data_type,data_value) ' +
-            'values(${user_id},${date},${message_type_app_key},${data_type},${data_value})', pushData)
+        db.none('insert into UserPushNotifications(user_id,date,message_type,data_type,data_value, data_value2) ' +
+            'values(${user_id},${date},${message_type_app_key},${data_type},${data_value},${data_value2})', pushData)
 
 
     }

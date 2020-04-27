@@ -124,14 +124,17 @@ function updateEvent(req, res, next) {
           //     data_type: req.body.data_name,
           //     data_value: req.body.event_id
           //   });
-          let user = { user_id: data[index].user_id };
-          let notif = {
-            message_type: req.body.reason_for_update,
-            data_type: req.body.data_name,
-            data_value: req.body.event_id
+          if (data[index].user_id != req.body.host_id) {
+
+            let user = { user_id: data[index].user_id };
+            let notif = {
+              message_type: req.body.reason_for_update,
+              data_type: req.body.data_name,
+              data_value: req.body.event_id
+            }
+            let token = data[index].user_push_token;
+            sendNotifToUserWithToken(notif, user, token);
           }
-          let token = data[index].user_push_token;
-          sendNotifToUserWithToken(notif, user, token);
         }
         // sendNotifications(participantNotifs);
 
@@ -147,30 +150,29 @@ function removeEvent(req, res, next) {
   db.any('select users.user_id,user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', event)
     .then((data) => {
       let participantNotifs = [];
-      db
-        .one('select * from Events where event_id = $1', event.event_id)
-        .then(function (eventData) {
-          for (let index = 0; index < data.length; index++) {
-            participantNotifs.push({
-              user_push_token: data[index].user_push_token,
-              user_id: data[index].user_id,
-              message_type: event.reason_for_update,
-              data_type: event.data_name,
-              data_value: eventData
-            });
+      for (let index = 0; index < data.length; index++) {
+        if (data[index].user_id != event.host_id) {
+          let user = { user_id: data[index].user_id };
+          let notif = {
+            message_type: event.reason_for_update,
+            data_type: event.data_name,
+            data_value: event.event_id
           }
-          db
-            .result('delete from Events where event_id = ${event_id}', event)
-            .then(function (result) {
-              /* jshint ignore:start */
-              res.status(200).json({
-                status: "success",
-                message: `Removed ${result.rowCount} Event`
-              });
-              sendNotifications(participantNotifs);
-            })
-          /* jshint ignore:end */
+          let token = data[index].user_push_token;
+          sendNotifToUserWithToken(notif, user, token);
+        }
+      }
+      db
+        .result('delete from Events where event_id = ${event_id}', event)
+        .then(function (result) {
+          /* jshint ignore:start */
+          res.status(200).json({
+            status: "success",
+            message: `Removed ${result.rowCount} Event`
+          });
+          sendNotifications(participantNotifs);
         })
+      /* jshint ignore:end */
     })
     .catch(function (err) {
       return next(err);

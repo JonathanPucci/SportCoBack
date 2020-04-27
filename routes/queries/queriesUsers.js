@@ -54,11 +54,22 @@ function getSingleUserByEmail(req, res, next) {
   db
     .one('select * from Users where email = $1', email)
     .then(function (data) {
-      res.status(200).json({
-        status: "success",
-        data: data,
-        message: "Retrieved ONE User"
-      });
+      db
+        .any('select * from Events where host_id = $1', data.user_id)
+        .then(function (eventsData) {
+          db
+        .any('select * from eventparticipants INNER JOIN events ON eventparticipants.event_id = events.event_id where eventparticipants.user_id = $1 and events.host_id != $1', data.user_id)
+        .then(function (joinedData) {
+          let result = data;
+          result['eventsCreated'] = eventsData;
+          result['eventsJoined'] = joinedData;
+          res.status(200).json({
+            status: "success",
+            data: result,
+            message: "Retrieved ONE User"
+          });
+        });
+        })
     })
     .catch(function (err) {
       console.log(err);
@@ -85,14 +96,23 @@ function createUser(req, res, next) {
 }
 
 function updateUser(req, res, next) {
+  let request = 'update Users set ';
+
+  if (req.body.user_name)
+    request += "user_name='" + req.body.user_name + "',";
+  if (req.body.photo_url)
+    request += "photo_url='" + req.body.photo_url + "',";
+  if (req.body.user_push_token)
+    request += "user_push_token='" + req.body.user_push_token + "',";
+  if (req.body.user_title)
+    request += "user_title='" + req.body.user_title + "',";
+  if (req.body.user_description)
+    request += "user_description='" + req.body.user_description + "',";
+  if (req.body.email)
+    request += "email='" + req.body.email + "'";;
+  request += ' where user_id =' + req.body.user_id;
   db
-    .none('update Users set email=$2, photo_url=$3, user_push_token=$5 where user_id=$4', [
-      req.body.user_name,
-      req.body.email,
-      req.body.photoURL,
-      req.body.user_id,
-      req.body.user_push_token
-    ])
+    .none(request)
     .then(function () {
       res.status(200).json({
         status: "success",
