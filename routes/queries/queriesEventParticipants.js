@@ -61,27 +61,30 @@ function createEventParticipant(req, res, next) {
         status: "success",
         message: "Inserted one EventParticipant"
       });
+      //findHost info
       db
         .one(
           'select * from users INNER JOIN events ON users.user_id = events.host_id where event_id=${event_id}',
           req.body
-        ).then((data) => {
-          db
-            .one(
-              'select * from users where user_id=${user_id}',
-              req.body
-            ).then((participantData) => {
-              console.log(data)
-              let user = { user_id: data.user_id };
-              let notif = {
-                message_type: "PARTICIPANT_JOINED",
-                data_type: "event_id",
-                data_value: req.body.event_id,
-                data_value2: participantData.photo_url
-              }
-              let token = data.user_push_token;
-              sendNotifToUserWithToken(notif, user, token);
-            });
+        ).then((hostData) => {
+          if (req.body.user_id != hostData.user_id) {
+            db
+              .one(
+                'select * from users where user_id=${user_id} ',
+                req.body
+              ).then((participantData) => {
+                console.log(hostData)
+                let user = { user_id: hostData.user_id };
+                let notif = {
+                  message_type: "PARTICIPANT_JOINED",
+                  data_type: "event_id",
+                  data_value: req.body.event_id,
+                  data_value2: participantData.photo_url
+                }
+                let token = hostData.user_push_token;
+                sendNotifToUserWithToken(notif, user, token);
+              });
+          }
         });
     })
     .catch(function (err) {
