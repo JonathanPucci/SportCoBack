@@ -63,6 +63,11 @@ function getSingleUserStats(req, res, next) {
             created : data.running_created,
             joined : data.running_joined,
             level : data.running_level,
+          },
+          vtt : {
+            created : data.vtt_created,
+            joined : data.vtt_joined,
+            level : data.vtt_level,
           }
         },
         message: "Retrieved ONE UserStat"

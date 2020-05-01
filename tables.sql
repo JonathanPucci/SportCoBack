@@ -38,6 +38,7 @@ CREATE TABLE UserStats (
 	volley_joined bigint DEFAULT 0,
 	workout_joined bigint DEFAULT 0,
 	running_joined bigint DEFAULT 0,	
+	vtt_joined bigint DEFAULT 0,	
 	basket_created bigint DEFAULT 0,
 	tennis_created bigint DEFAULT 0,
 	soccer_created bigint DEFAULT 0,
@@ -46,6 +47,7 @@ CREATE TABLE UserStats (
 	volley_created bigint DEFAULT 0,
 	workout_created bigint DEFAULT 0,
 	running_created bigint DEFAULT 0,	
+	vtt_created bigint DEFAULT 0,	
 	basket_level sport_level DEFAULT 'intermediate',
 	tennis_level sport_level DEFAULT 'intermediate',
 	soccer_level sport_level DEFAULT 'intermediate',
@@ -54,6 +56,7 @@ CREATE TABLE UserStats (
 	volley_level sport_level DEFAULT 'intermediate',
 	workout_level sport_level DEFAULT 'intermediate',
 	running_level sport_level DEFAULT 'intermediate',	
+	vtt_level sport_level DEFAULT 'intermediate',	
 	CONSTRAINT user_id PRIMARY KEY (user_id)
 ) WITH (
   OIDS=FALSE
