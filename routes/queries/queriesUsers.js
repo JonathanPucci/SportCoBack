@@ -58,17 +58,17 @@ function getSingleUserByEmail(req, res, next) {
         .any('select * from Events where host_id = $1', data.user_id)
         .then(function (eventsData) {
           db
-        .any('select * from eventparticipants INNER JOIN events ON eventparticipants.event_id = events.event_id where eventparticipants.user_id = $1 and events.host_id != $1', data.user_id)
-        .then(function (joinedData) {
-          let result = data;
-          result['eventsCreated'] = eventsData;
-          result['eventsJoined'] = joinedData;
-          res.status(200).json({
-            status: "success",
-            data: result,
-            message: "Retrieved ONE User"
-          });
-        });
+            .any('select * from eventparticipants INNER JOIN events ON eventparticipants.event_id = events.event_id where eventparticipants.user_id = $1 and events.host_id != $1', data.user_id)
+            .then(function (joinedData) {
+              let result = data;
+              result['eventsCreated'] = eventsData;
+              result['eventsJoined'] = joinedData;
+              res.status(200).json({
+                status: "success",
+                data: result,
+                message: "Retrieved ONE User"
+              });
+            });
         })
     })
     .catch(function (err) {
@@ -109,7 +109,8 @@ function updateUser(req, res, next) {
   if (req.body.user_description)
     request += "user_description='" + req.body.user_description + "',";
   if (req.body.email)
-    request += "email='" + req.body.email + "'";;
+    request += "email='" + req.body.email + "',";
+  request = request.slice(0, -1);
   request += ' where user_id =' + req.body.user_id;
   db
     .none(request)

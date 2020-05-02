@@ -68,6 +68,11 @@ function getSingleUserStats(req, res, next) {
             created : data.vtt_created,
             joined : data.vtt_joined,
             level : data.vtt_level,
+          },
+          roadbike : {
+            created : data.roadbike_created,
+            joined : data.roadbike_joined,
+            level : data.roadbike_level,
           }
         },
         message: "Retrieved ONE UserStat"

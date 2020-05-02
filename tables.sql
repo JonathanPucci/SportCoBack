@@ -10,7 +10,7 @@ DROP TABLE Spots CASCADE;
 
 
 
-CREATE TYPE sport AS ENUM ('basket', 'soccer', 'futsal', 'workout', 'running', 'volley', 'beachvolley', 'tennis');
+CREATE TYPE sport AS ENUM ('basket', 'soccer', 'futsal', 'workout', 'running', 'volley', 'beachvolley', 'tennis','vtt','roadbike');
 CREATE TYPE sport_level AS ENUM ('first time', 'beginner', 'intermediate', 'advanced', 'pro');
 CREATE TYPE visibility AS ENUM ('public','private');
 
@@ -39,6 +39,7 @@ CREATE TABLE UserStats (
 	workout_joined bigint DEFAULT 0,
 	running_joined bigint DEFAULT 0,	
 	vtt_joined bigint DEFAULT 0,	
+	roadbike_joined bigint DEFAULT 0,	
 	basket_created bigint DEFAULT 0,
 	tennis_created bigint DEFAULT 0,
 	soccer_created bigint DEFAULT 0,
@@ -48,6 +49,7 @@ CREATE TABLE UserStats (
 	workout_created bigint DEFAULT 0,
 	running_created bigint DEFAULT 0,	
 	vtt_created bigint DEFAULT 0,	
+	roadbike_created bigint DEFAULT 0,	
 	basket_level sport_level DEFAULT 'intermediate',
 	tennis_level sport_level DEFAULT 'intermediate',
 	soccer_level sport_level DEFAULT 'intermediate',
@@ -57,6 +59,7 @@ CREATE TABLE UserStats (
 	workout_level sport_level DEFAULT 'intermediate',
 	running_level sport_level DEFAULT 'intermediate',	
 	vtt_level sport_level DEFAULT 'intermediate',	
+	roadbike_level sport_level DEFAULT 'intermediate',	
 	CONSTRAINT user_id PRIMARY KEY (user_id)
 ) WITH (
   OIDS=FALSE
