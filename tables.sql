@@ -28,6 +28,14 @@ CREATE TABLE Users (
   OIDS=FALSE
 );
 
+CREATE TABLE UserFriends (
+	user_id bigint NOT NULL,
+	friend_id bigint NOT NULL,
+	CONSTRAINT UserFriends_pk PRIMARY KEY (user_id, friend_id)
+) WITH (
+  OIDS=FALSE
+);
+
 CREATE TABLE UserStats (
 	user_id bigint NOT NULL,
 	basket_joined bigint DEFAULT 0,
@@ -140,6 +148,8 @@ CREATE TABLE FieldSpots (
 
 
 ALTER TABLE UserStats ADD CONSTRAINT UserStats_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
+ALTER TABLE UserFriends ADD CONSTRAINT UserFriends_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
+ALTER TABLE UserFriends ADD CONSTRAINT UserFriends_fk1 FOREIGN KEY (friend_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE UserPushNotifications ADD CONSTRAINT UserPushNotifications_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk0 FOREIGN KEY (Host_ID) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;

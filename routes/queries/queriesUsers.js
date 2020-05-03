@@ -58,16 +58,21 @@ function getSingleUserByEmail(req, res, next) {
         .any('select * from Events where host_id = $1', data.user_id)
         .then(function (eventsData) {
           db
-            .any('select * from eventparticipants INNER JOIN events ON eventparticipants.event_id = events.event_id where eventparticipants.user_id = $1 and events.host_id != $1', data.user_id)
-            .then(function (joinedData) {
-              let result = data;
-              result['eventsCreated'] = eventsData;
-              result['eventsJoined'] = joinedData;
-              res.status(200).json({
-                status: "success",
-                data: result,
-                message: "Retrieved ONE User"
-              });
+            .any('select * from UserFriends INNER JOIN Users ON UserFriends.friend_id = Users.user_id where UserFriends.user_id = $1', data.user_id)
+            .then(function (friendsData) {
+              db
+                .any('select * from eventparticipants INNER JOIN events ON eventparticipants.event_id = events.event_id where eventparticipants.user_id = $1 and events.host_id != $1', data.user_id)
+                .then(function (joinedData) {
+                  let result = data;
+                  result['eventsCreated'] = eventsData;
+                  result['eventsJoined'] = joinedData;
+                  result['userFriends'] = friendsData;
+                  res.status(200).json({
+                    status: "success",
+                    data: result,
+                    message: "Retrieved ONE User"
+                  });
+                });
             });
         })
     })
