@@ -103,3 +103,7 @@ dist
 
 # TernJS port file
 .tern-port
+.gitsecret/keys/random_seed
+!*.secret
+sportcoapp-firebase-adminsdk-jchxw-641566c3e5.json
+sportcoapp-firebase-adminsdk-jchxw-creds.json

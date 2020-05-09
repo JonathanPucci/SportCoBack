@@ -63,15 +63,20 @@ function getSingleUserByEmail(req, res, next) {
               db
                 .any('select * from eventparticipants INNER JOIN events ON eventparticipants.event_id = events.event_id where eventparticipants.user_id = $1 and events.host_id != $1', data.user_id)
                 .then(function (joinedData) {
-                  let result = data;
-                  result['eventsCreated'] = eventsData;
-                  result['eventsJoined'] = joinedData;
-                  result['userFriends'] = friendsData;
-                  res.status(200).json({
-                    status: "success",
-                    data: result,
-                    message: "Retrieved ONE User"
-                  });
+                  db
+                    .any('select * from teams INNER JOIN teammembers ON teams.team_id = teammembers.team_id where teammembers.member_id = $1', data.user_id)
+                    .then(function (teamsData) {
+                      let result = data;
+                      result['eventsCreated'] = eventsData;
+                      result['eventsJoined'] = joinedData;
+                      result['userFriends'] = friendsData;
+                      result['userTeams'] = teamsData;
+                      res.status(200).json({
+                        status: "success",
+                        data: result,
+                        message: "Retrieved ONE User"
+                      });
+                    });
                 });
             });
         })
@@ -131,21 +136,40 @@ function updateUser(req, res, next) {
 }
 
 function updateUserByEmail(req, res, next) {
-  db
-    .none('update Users set user_name=$1, photo_url=$3 where email=$2', [
-      req.body.user_name,
-      req.body.email,
-      req.body.photo_url
-    ])
-    .then(function (data) {
-      res.status(200).json({
-        status: "success",
-        message: "Updated User"
+  let request = 'update Users set ';
+  let requestInit = 'update Users set ';
+
+  if (req.body.user_name)
+    request += "user_name='" + req.body.user_name + "',";
+  if (req.body.photo_url)
+    request += "photo_url='" + req.body.photo_url + "',";
+  if (req.body.user_push_token)
+    request += "user_push_token='" + req.body.user_push_token + "',";
+  if (req.body.user_title)
+    request += "user_title='" + req.body.user_title + "',";
+  if (req.body.user_description)
+    request += "user_description='" + req.body.user_description + "',";
+
+  if (request != requestInit) {
+    request = request.slice(0, -1);
+    request += " where email ='" + req.body.email + "'";
+    db
+      .none(request)
+      .then(function () {
+        res.status(200).json({
+          status: "success",
+          message: "Updated User"
+        });
+      })
+      .catch(function (err) {
+        return next(err);
       });
-    })
-    .catch(function (err) {
-      return next(err);
+  } else {
+    res.status(200).json({
+      status: "success",
+      message: "Well.. nothing to update"
     });
+  }
 }
 
 function removeUser(req, res, next) {

@@ -22,12 +22,32 @@ admin.initializeApp({
 // admin.initializeApp(firebaseConfig);
 // admin.analytics();
 
+computeTitle = (title) => {
+    console.log(title.toLowerCase().includes("joined"));
+    if(title.toLowerCase().includes("cancel")) 
+      return "An event you join has been canceled"
+    
+    if(title.toLowerCase().includes("update")) 
+      return "An event you join has been updated"
+    
+    if(title.toLowerCase().includes("joined")) 
+      return "Someone joined your event"
+    
+    if(title.toLowerCase().includes("left")) 
+      return "Someone left your event"
+    
+      return title;
+    
+  }
+
 
 sendNotifToUserWithToken = async (notif, user, token) => {
 
+    let notifTitle = computeTitle(notif.message_type);
+
     var notification =
     {
-        title: notif.message_type,
+        title: notifTitle,
         body: 'Check it out !'
     };
     console.log(notif);
@@ -71,7 +91,7 @@ sendNotifToUserWithToken = async (notif, user, token) => {
 //     data_value: 1,
 //     data_value2: 'https://graph.facebook.com/2934553376621421/picture'
 // }
-// let token = 'ew_GGUma6p8:APA91bGMPVgR0kG7mkr7WQwui1d28_4mdQst4syBJAdnhIyXgFeELaioku-9ufIx8fkHWaxDbWh0S7w5aOqHPNBeh1Jl_OeWNsMdJvtGfMYd_Vmh_FCQwLMBhbV_o6VEjJPfzG8E6yQw';
+// let token = 'fgawVd3t8ZA:APA91bFRrWLVkst_1oKdy34F_48lqKke1WX-2i6xPEjSF5a4WtySHiu1HJrqYmtLa5lERlFxZCE5qJ3A__CJVqi9CwXCGtc60Wp91RNvhFB8W7jpewbOCizbbGG_N710Cw53-E3OVn96';
 // sendNotifToUserWithToken(notif, user, token);
 
 module.exports = {
