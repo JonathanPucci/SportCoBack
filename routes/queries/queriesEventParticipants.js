@@ -63,28 +63,31 @@ function createEventParticipant(req, res, next) {
       });
       //findHost info
       db
-        .one(
-          'select * from users INNER JOIN events ON users.user_id = events.host_id where event_id=${event_id}',
+        .any(
+          'select * from users INNER JOIN eventparticipants ON users.user_id = eventparticipants.user_id where eventparticipants.event_id=${event_id} and eventparticipants.user_id!=${user_id}',
           req.body
-        ).then((hostData) => {
-          if (req.body.user_id != hostData.user_id) {
-            db
-              .one(
-                'select * from users where user_id=${user_id} ',
-                req.body
-              ).then((participantData) => {
-                console.log(hostData)
-                let user = { user_id: hostData.user_id };
+        ).then((participantsData) => {
+          console.log(participantsData)
+          db
+            .one(
+              'select * from users where user_id=${user_id} ',
+              req.body
+            ).then((participantData) => {
+              for (let index = 0; index < participantsData.length; index++) {
+                const participant = participantsData[index];
+                console.log(participant)
+                let user = { user_id: participant.user_id };
                 let notif = {
                   message_type: "PARTICIPANT_JOINED",
                   data_type: "event_id",
                   data_value: req.body.event_id,
-                  data_value2: participantData.photo_url
+                  data_value2: participantData.photo_url,
+                  sender_id: req.body.user_id.toString()
                 }
-                let token = hostData.user_push_token;
+                let token = participant.user_push_token;
                 sendNotifToUserWithToken(notif, user, token);
-              });
-          }
+              }
+            });
         });
     })
     .catch(function (err) {
@@ -105,24 +108,29 @@ function removeEventParticipant(req, res, next) {
         message: `Removed ${result.rowCount} EventParticipant`
       });
       db
-        .one(
-          'select * from users INNER JOIN events ON users.user_id = events.host_id where event_id=${event_id}',
+        .any(
+          'select * from users INNER JOIN eventparticipants ON users.user_id = eventparticipants.user_id where eventparticipants.event_id=${event_id} and eventparticipants.user_id!=${user_id}',
           eventparticipant
-        ).then((data) => {
+        ).then((participantsData) => {
           db
             .one(
               'select * from users where user_id=${user_id}',
               eventparticipant
             ).then((participantData) => {
-              let user = { user_id: data.user_id };
-              let notif = {
-                message_type: "PARTICIPANT_LEFT",
-                data_type: "event_id",
-                data_value: eventparticipant.event_id,
-                data_value2: participantData.photo_url
+              for (let index = 0; index < participantsData.length; index++) {
+                const participant = participantsData[index];
+                console.log(participant)
+                let user = { user_id: participant.user_id };
+                let notif = {
+                  message_type: "PARTICIPANT_LEFT",
+                  data_type: "event_id",
+                  data_value: eventparticipant.event_id,
+                  data_value2: participantData.photo_url,
+                  sender_id: eventparticipant.user_id.toString()
+                }
+                let token = participant.user_push_token;
+                sendNotifToUserWithToken(notif, user, token);
               }
-              let token = data.user_push_token;
-              sendNotifToUserWithToken(notif, user, token);
             });
         });
     })

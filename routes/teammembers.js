@@ -7,5 +7,7 @@ router.get("/", db.getAllTeamMembers);
 router.get("/:id", db.getSingleTeamMember);
 router.post("/", db.createTeamMember);
 router.delete("/:teammember", db.removeTeamMember);
+router.post("/waiting", db.createTeamMemberWaiting);
+router.delete("/waiting/:teammember", db.removeTeamMemberWaiting);
 
 module.exports = router;

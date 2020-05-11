@@ -3,6 +3,7 @@ DROP TABLE UserStats CASCADE;
 DROP TABLE UserFriends CASCADE;
 DROP TABLE UserPushNotifications CASCADE;
 DROP TABLE TeamMembers CASCADE;
+DROP TABLE WaitingTeamMembers CASCADE;
 DROP TABLE Teams CASCADE;
 DROP TABLE EventComments CASCADE;
 DROP TABLE EventParticipants CASCADE;
@@ -85,6 +86,7 @@ CREATE TABLE UserPushNotifications (
 	data_type VARCHAR(255),
 	data_value VARCHAR(255),
 	data_value2 VARCHAR(255),
+	sender_id bigint,
 	CONSTRAINT user_id_key_notif PRIMARY KEY (user_id,date)
 ) WITH (
   OIDS=FALSE
@@ -95,6 +97,7 @@ CREATE TABLE Teams (
 	team_name TEXT NOT NULL,
 	team_description TEXT DEFAULT 'Oh yeah',
 	team_manager bigint NOT NULL,
+	manager_has_to_accept int NOT NULL,
 	team_creation_date timestamp not null,
 	CONSTRAINT Teams_pk PRIMARY KEY (team_id)
 ) WITH (
@@ -105,6 +108,15 @@ CREATE TABLE TeamMembers (
 	team_id bigint NOT NULL,
 	member_id bigint not null,
 	CONSTRAINT TeamMembers_pk PRIMARY KEY (team_id,member_id)
+) WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE WaitingTeamMembers (
+	team_id bigint NOT NULL,
+	member_id bigint not null,
+	date_asked timestamp,
+	CONSTRAINT WaitingTeamMembers_pk PRIMARY KEY (team_id,member_id)
 ) WITH (
   OIDS=FALSE
 );
@@ -151,8 +163,8 @@ CREATE TABLE Spots (
 );
 
 CREATE TABLE EventParticipants (
-	user_id serial NOT NULL,
-	event_id serial NOT NULL,
+	user_id bigint NOT NULL,
+	event_id bigint NOT NULL,
 	UNIQUE (user_id,event_id)
 ) WITH (
   OIDS=FALSE
@@ -173,9 +185,12 @@ ALTER TABLE UserStats ADD CONSTRAINT UserStats_fk0 FOREIGN KEY (user_id) REFEREN
 ALTER TABLE UserFriends ADD CONSTRAINT UserFriends_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE UserFriends ADD CONSTRAINT UserFriends_fk1 FOREIGN KEY (friend_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE UserPushNotifications ADD CONSTRAINT UserPushNotifications_fk0 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;
+ALTER TABLE UserPushNotifications ADD CONSTRAINT UserPushNotifications_fk1 FOREIGN KEY (sender_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Teams ADD CONSTRAINT Teams_fk0 FOREIGN KEY (team_manager) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE TeamMembers ADD CONSTRAINT TeamMembers_fk0 FOREIGN KEY (member_id) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE TeamMembers ADD CONSTRAINT TeamMembers_fk1 FOREIGN KEY (team_id) REFERENCES Teams(team_id) ON DELETE CASCADE;
+ALTER TABLE WaitingTeamMembers ADD CONSTRAINT WaitingTeamMembers_fk0 FOREIGN KEY (member_id) REFERENCES Users(user_id) ON DELETE CASCADE;
+ALTER TABLE WaitingTeamMembers ADD CONSTRAINT WaitingTeamMembers_fk1 FOREIGN KEY (team_id) REFERENCES Teams(team_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk0 FOREIGN KEY (Host_ID) REFERENCES Users(user_id) ON DELETE CASCADE;
 ALTER TABLE Events ADD CONSTRAINT Events_fk1 FOREIGN KEY (Spot_ID) REFERENCES Spots(Spot_ID) ON DELETE CASCADE;
 ALTER TABLE EventComments ADD CONSTRAINT EventComments_fk1 FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE;

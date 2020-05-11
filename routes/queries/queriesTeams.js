@@ -23,16 +23,21 @@ function getSingleTeam(req, res, next) {
     .one('select * from Teams where team_id = $1', teamID)
     .then(function (teamData) {
       db
-        .any('select * from TeamMembers INNER JOIN Users ON Teammembers.member_id = Users.user_id where team_id = $1', teamID)
+        .any('select * from TeamMembers INNER JOIN Users ON Teammembers.member_id = Users.user_id where TeamMembers.team_id = $1', teamID)
         .then(function (membersData) {
-          res.status(200).json({
-            status: "success",
-            data: {
-              team: teamData,
-              teammembers: membersData
-            },
-            message: "Retrieved ONE Team"
-          });
+          db
+            .any('select * from WaitingTeamMembers INNER JOIN Users ON WaitingTeamMembers.member_id = Users.user_id where WaitingTeamMembers.team_id = $1', teamID)
+            .then(function (waitingmembersData) {
+              res.status(200).json({
+                status: "success",
+                data: {
+                  team: teamData,
+                  teammembers: membersData,
+                  waitingMembers: waitingmembersData
+                },
+                message: "Retrieved ONE Team"
+              });
+            })
         })
     })
 
@@ -42,11 +47,10 @@ function getSingleTeam(req, res, next) {
 }
 
 function createTeam(req, res, next) {
-  console.log(req.body.team_creation_date)
   db
     .any(
-      'insert into Teams( team_id,team_name, team_description, team_manager, team_creation_date)' +
-      "values( DEFAULT, ${team_name}, ${team_description}, ${team_manager}, ${team_creation_date}) RETURNING team_id",
+      'insert into Teams( team_id,team_name, team_description, team_manager, team_creation_date, manager_has_to_accept)' +
+      "values( DEFAULT, ${team_name}, ${team_description}, ${team_manager}, ${team_creation_date}, ${manager_has_to_accept}) RETURNING team_id",
       req.body
     )
     .then(function (data) {
@@ -67,7 +71,7 @@ function createTeam(req, res, next) {
 function updateTeam(req, res, next) {
   db
     .none(
-      'update Teams set team_name=${team_name}, team_description=${team_description}, team_manager=${team_manager} where team_id=${team_id} ',
+      'update Teams set team_name=${team_name}, team_description=${team_description}, team_manager=${team_manager}, manager_has_to_accept=${manager_has_to_accept} where team_id=${team_id} ',
       req.body
     )
     .then(function () {
@@ -83,7 +87,7 @@ function updateTeam(req, res, next) {
 
 function removeTeam(req, res, next) {
   var team = JSON.parse(req.params.team);
-  db.any('select * from users INNER JOIN teammembers on teammembers.user_id = Users.user_id where teammembers.team_id = ${team_id}', team)
+  db.any('select * from users INNER JOIN teammembers on teammembers.member_id = Users.user_id where teammembers.team_id = ${team_id}', team)
     .then((data) => {
       console.log('Members to alert : ');
       console.log(data);

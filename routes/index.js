@@ -9,6 +9,7 @@ const spots = require("./spots");
 const eventparticipant = require("./eventparticipant");
 const eventcomment = require("./eventcomment");
 const fieldspot = require("./fieldspot");
+const notify = require("./notify");
 
 module.exports = app => {
   app.use("/api/users", users);
@@ -21,5 +22,6 @@ module.exports = app => {
   app.use("/api/eventparticipant", eventparticipant);
   app.use("/api/eventcomment", eventcomment);
   app.use("/api/fieldspot", fieldspot);
+  app.use("/api/notify", notify);
   // etc..
 };

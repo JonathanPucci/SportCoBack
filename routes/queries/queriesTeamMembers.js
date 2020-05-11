@@ -53,8 +53,8 @@ function createTeamMember(req, res, next) {
 
 function removeTeamMember(req, res, next) {
   var teammember = JSON.parse(req.params.teammember);
-  
-  let DBrequest = 'delete from teammembers where team_id= '+teammember.team_id+' and member_id='+teammember.member_id;
+
+  let DBrequest = 'delete from teammembers where team_id= ' + teammember.team_id + ' and member_id=' + teammember.member_id;
   db
     .result(DBrequest)
     .then(function (result) {
@@ -70,9 +70,45 @@ function removeTeamMember(req, res, next) {
     });
 }
 
+function createTeamMemberWaiting(req, res, next) {
+  return db
+    .none('insert into waitingteammembers(team_id,member_id) values(${team_id},${member_id})', req.body)
+    .then(function () {
+      res.status(200).json({
+        status: "success",
+        message: "Inserted one waitingteammembers"
+      });
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+
+function removeTeamMemberWaiting(req, res, next) {
+  var teammember = JSON.parse(req.params.teammember);
+
+  let DBrequest = 'delete from waitingteammembers where team_id= ' + teammember.team_id + ' and member_id=' + teammember.member_id;
+  db
+    .result(DBrequest)
+    .then(function (result) {
+      /* jshint ignore:start */
+      res.status(200).json({
+        status: "success",
+        message: `Removed ${result.rowCount} waitingteammembers`
+      });
+      /* jshint ignore:end */
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
 module.exports = {
   getAllTeamMembers: getAllTeamMembers,
   getSingleTeamMember: getSingleTeamMember,
   createTeamMember: createTeamMember,
-  removeTeamMember: removeTeamMember
+  removeTeamMember: removeTeamMember,
+  createTeamMemberWaiting: createTeamMemberWaiting,
+  removeTeamMemberWaiting: removeTeamMemberWaiting
 };

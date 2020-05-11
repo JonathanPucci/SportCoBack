@@ -1,5 +1,4 @@
 var db = require("../../dbconnection").db;
-var sendNotifications = require("../../notifications/notifications").sendNotifications;
 var sendNotifToUserWithToken = require("../../notifications/firebaseNotifications").sendNotifToUserWithToken;
 
 // add query functions
@@ -114,31 +113,29 @@ function updateEvent(req, res, next) {
         status: "success",
         message: "Updated Event"
       });
-      db.any('select users.user_id,user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', req.body).then((data) => {
-        for (let index = 0; index < data.length; index++) {
-          // console.log(data[index]);
-          //   participantNotifs.push({
-          //     user_push_token: data[index].user_push_token,
-          //     user_id: data[index].user_id,
-          //     message_type: req.body.reason_for_update,
-          //     data_type: req.body.data_name,
-          //     data_value: req.body.event_id
-          //   });
-          if (data[index].user_id != req.body.host_id) {
+      db.one('select * from users INNER JOIN events ON events.host_id= users.user_id where events.event_id  =' + req.body.event_id)
+        .then((hostData) => {
+          let hostPhotoURL = hostData.photo_url;
+          db.any('select users.user_id,user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', req.body).then((data) => {
+            for (let index = 0; index < data.length; index++) {
 
-            let user = { user_id: data[index].user_id };
-            let notif = {
-              message_type: req.body.reason_for_update,
-              data_type: req.body.data_name,
-              data_value: req.body.event_id
+              if (data[index].user_id != req.body.host_id) {
+
+                let user = { user_id: data[index].user_id };
+                let notif = {
+                  message_type: req.body.reason_for_update,
+                  data_type: req.body.data_name,
+                  data_value: req.body.event_id,
+                  data_value2: hostPhotoURL,
+                  sender_id: req.body.host_id
+                }
+                let token = data[index].user_push_token;
+                sendNotifToUserWithToken(notif, user, token);
+              }
             }
-            let token = data[index].user_push_token;
-            sendNotifToUserWithToken(notif, user, token);
-          }
-        }
-        // sendNotifications(participantNotifs);
 
-      })
+          })
+        })
     })
     .catch(function (err) {
       return next(err);
@@ -147,36 +144,40 @@ function updateEvent(req, res, next) {
 
 function removeEvent(req, res, next) {
   var event = JSON.parse(req.params.event);
-  db.any('select users.user_id,user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', event)
-    .then((data) => {
-      let participantNotifs = [];
-      for (let index = 0; index < data.length; index++) {
-        if (data[index].user_id != event.host_id) {
-          let user = { user_id: data[index].user_id };
-          let notif = {
-            message_type: event.reason_for_update,
-            data_type: event.data_name,
-            data_value: event.event_id
+  db.one('select * from users INNER JOIN events ON events.host_id= users.user_id where events.event_id  =' + event.event_id)
+    .then((hostData) => {
+      let hostPhotoURL = hostData.photo_url;
+      db.any('select users.user_id,user_push_token from users INNER JOIN eventparticipants on eventparticipants.user_id = Users.user_id where event_id = ${event_id}', event)
+        .then((data) => {
+          for (let index = 0; index < data.length; index++) {
+            if (data[index].user_id != event.host_id) {
+              let user = { user_id: data[index].user_id };
+              let notif = {
+                message_type: event.reason_for_update,
+                data_type: event.data_name,
+                data_value: event.event_id,
+                data_value2: hostPhotoURL,
+                sender_id: event.host_id
+              }
+              let token = data[index].user_push_token;
+              sendNotifToUserWithToken(notif, user, token);
+            }
           }
-          let token = data[index].user_push_token;
-          sendNotifToUserWithToken(notif, user, token);
-        }
-      }
-      db
-        .result('delete from Events where event_id = ${event_id}', event)
-        .then(function (result) {
-          /* jshint ignore:start */
-          res.status(200).json({
-            status: "success",
-            message: `Removed ${result.rowCount} Event`
-          });
-          sendNotifications(participantNotifs);
+          db
+            .result('delete from Events where event_id = ${event_id}', event)
+            .then(function (result) {
+              /* jshint ignore:start */
+              res.status(200).json({
+                status: "success",
+                message: `Removed ${result.rowCount} Event`
+              });
+            })
+          /* jshint ignore:end */
         })
-      /* jshint ignore:end */
+        .catch(function (err) {
+          return next(err);
+        })
     })
-    .catch(function (err) {
-      return next(err);
-    });
 }
 
 module.exports = {

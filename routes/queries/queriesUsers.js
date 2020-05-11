@@ -35,7 +35,7 @@ function getSingleUser(req, res, next) {
 function getSingleUserNotifications(req, res, next) {
   var userId = parseInt(req.params.id);
   db
-    .any('select * from userpushnotifications where user_id = $1', userId)
+    .any('select * from userpushnotifications INNER JOIN Users ON userpushnotifications.sender_id = users.user_id where userpushnotifications.user_id = $1', userId)
     .then(function (data) {
       res.status(200).json({
         status: "success",
@@ -64,18 +64,23 @@ function getSingleUserByEmail(req, res, next) {
                 .any('select * from eventparticipants INNER JOIN events ON eventparticipants.event_id = events.event_id where eventparticipants.user_id = $1 and events.host_id != $1', data.user_id)
                 .then(function (joinedData) {
                   db
-                    .any('select * from teams INNER JOIN teammembers ON teams.team_id = teammembers.team_id where teammembers.member_id = $1', data.user_id)
+                    .any('select * from teammembers INNER JOIN teams ON teams.team_id = teammembers.team_id where teammembers.member_id = $1', data.user_id)
                     .then(function (teamsData) {
-                      let result = data;
-                      result['eventsCreated'] = eventsData;
-                      result['eventsJoined'] = joinedData;
-                      result['userFriends'] = friendsData;
-                      result['userTeams'] = teamsData;
-                      res.status(200).json({
-                        status: "success",
-                        data: result,
-                        message: "Retrieved ONE User"
-                      });
+                      db
+                        .any('select * from waitingteammembers INNER JOIN teams  ON teams.team_id = waitingteammembers.team_id where waitingteammembers.member_id = $1', data.user_id)
+                        .then(function (teamsWaitingData) {
+                          let result = data;
+                          result['eventsCreated'] = eventsData;
+                          result['eventsJoined'] = joinedData;
+                          result['userFriends'] = friendsData;
+                          result['userTeams'] = teamsData;
+                          result['userTeamsWaiting'] = teamsWaitingData;
+                          res.status(200).json({
+                            status: "success",
+                            data: result,
+                            message: "Retrieved ONE User"
+                          });
+                        });
                     });
                 });
             });
