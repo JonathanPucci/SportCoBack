@@ -22,10 +22,12 @@ CREATE TYPE visibility AS ENUM ('public','private');
 CREATE TABLE Users (
 	user_id serial NOT NULL,
 	User_Name TEXT NOT NULL,
+	User_age int DEFAULT 25,
 	user_title TEXT DEFAULT 'Who cares?',
 	user_description TEXT DEFAULT 'Oh yeah',
 	Email VARCHAR(255) NOT NULL UNIQUE,
 	Photo_url VARCHAR(255),
+	Photo_url_s3 VARCHAR(255),
 	user_push_token VARCHAR(255) UNIQUE,
 	CONSTRAINT Users_pk PRIMARY KEY (user_id)
 ) WITH (

@@ -50,7 +50,6 @@ function getSingleUserNotifications(req, res, next) {
 
 function getSingleUserByEmail(req, res, next) {
   var email = req.params.id;
-
   db
     .one('select * from Users where email = $1', email)
     .then(function (data) {
@@ -115,8 +114,12 @@ function updateUser(req, res, next) {
 
   if (req.body.user_name)
     request += "user_name='" + req.body.user_name + "',";
+  if (req.body.user_age)
+    request += "user_age='" + req.body.user_age + "',";
   if (req.body.photo_url)
     request += "photo_url='" + req.body.photo_url + "',";
+  if (req.body.photo_url_s3)
+    request += "photo_url_s3='" + req.body.photo_url_s3 + "',";
   if (req.body.user_push_token)
     request += "user_push_token='" + req.body.user_push_token + "',";
   if (req.body.user_title)
@@ -146,8 +149,12 @@ function updateUserByEmail(req, res, next) {
 
   if (req.body.user_name)
     request += "user_name='" + req.body.user_name + "',";
+  if (req.body.user_age)
+    request += "user_age='" + req.body.user_age + "',";
   if (req.body.photo_url)
     request += "photo_url='" + req.body.photo_url + "',";
+  if (req.body.photo_url_s3)
+    request += "photo_url_s3='" + req.body.photo_url_s3 + "',";
   if (req.body.user_push_token)
     request += "user_push_token='" + req.body.user_push_token + "',";
   if (req.body.user_title)

@@ -40,6 +40,11 @@ computeTitle = (title) => {
   if (title.toLowerCase().includes("invit"))
     return "Someone invited you to an event"
 
+  if (title.toLowerCase().includes("wants_to_join"))
+    return "Someone wants to join your team"
+  if (title.toLowerCase().includes("new_team_member"))
+    return "Someone joined your team"
+
   return title;
 
 }
