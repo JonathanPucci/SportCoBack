@@ -93,7 +93,7 @@ function getSingleUserByEmail(req, res, next) {
 
 function createUser(req, res, next) {
   return db
-    .one('insert into Users(user_id,user_name,email,photo_url) values(DEFAULT,${user_name},${email},${photo_url}) RETURNING user_id', req.body)
+    .one('insert into Users(user_id,user_name,email,photo_url,photo_to_use) values(DEFAULT,${user_name},${email},${photo_url},${photo_to_use}) RETURNING user_id', req.body)
     .then((data) => {
       res.status(200).json({
         status: "success",
@@ -120,6 +120,8 @@ function updateUser(req, res, next) {
     request += "photo_url='" + req.body.photo_url + "',";
   if (req.body.photo_url_s3)
     request += "photo_url_s3='" + req.body.photo_url_s3 + "',";
+  if (req.body.photo_to_use)
+    request += "photo_to_use='" + req.body.photo_to_use + "',";
   if (req.body.user_push_token)
     request += "user_push_token='" + req.body.user_push_token + "',";
   if (req.body.user_title)
@@ -155,6 +157,8 @@ function updateUserByEmail(req, res, next) {
     request += "photo_url='" + req.body.photo_url + "',";
   if (req.body.photo_url_s3)
     request += "photo_url_s3='" + req.body.photo_url_s3 + "',";
+  if (req.body.photo_to_use)
+    request += "photo_to_use='" + req.body.photo_to_use + "',";
   if (req.body.user_push_token)
     request += "user_push_token='" + req.body.user_push_token + "',";
   if (req.body.user_title)

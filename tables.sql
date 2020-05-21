@@ -17,6 +17,7 @@ DROP TABLE Spots CASCADE;
 CREATE TYPE sport AS ENUM ('basket', 'soccer', 'futsal', 'workout', 'running', 'volley', 'beachvolley', 'tennis','vtt','roadbike');
 CREATE TYPE sport_level AS ENUM ('first time', 'beginner', 'intermediate', 'advanced', 'pro');
 CREATE TYPE visibility AS ENUM ('public','private');
+CREATE TYPE photo_code AS ENUM ('default','fb','custom');
 
 
 CREATE TABLE Users (
@@ -28,6 +29,7 @@ CREATE TABLE Users (
 	Email VARCHAR(255) NOT NULL UNIQUE,
 	Photo_url VARCHAR(255),
 	Photo_url_s3 VARCHAR(255),
+	photo_to_use photo_code DEFAULT 'default',
 	user_push_token VARCHAR(255) UNIQUE,
 	CONSTRAINT Users_pk PRIMARY KEY (user_id)
 ) WITH (

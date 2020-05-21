@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 
 AWS.config.update(
     process.env.S3_PRIVATE_KEY_ID == undefined ?
-        require("../s3Credentials.json") :
+        require("./s3Credentials.json") :
         {
             accessKeyId: process.env.S3_PRIVATE_KEY_ID,
             secretAccessKey: process.env.S3_SECRET_KEY
