@@ -31,6 +31,7 @@ CREATE TABLE Users (
 	Photo_url_s3 VARCHAR(255),
 	photo_to_use photo_code DEFAULT 'default',
 	user_push_token VARCHAR(255) UNIQUE,
+	auto_save_to_calendar boolean default false,
 	CONSTRAINT Users_pk PRIMARY KEY (user_id)
 ) WITH (
   OIDS=FALSE

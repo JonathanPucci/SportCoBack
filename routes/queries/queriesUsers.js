@@ -128,6 +128,8 @@ function updateUser(req, res, next) {
     request += "user_title='" + req.body.user_title + "',";
   if (req.body.user_description)
     request += "user_description='" + req.body.user_description + "',";
+  if (req.body.auto_save_to_calendar != undefined)
+    request += "auto_save_to_calendar=" + (req.body.auto_save_to_calendar ? "true," : "false,");
   if (req.body.email)
     request += "email='" + req.body.email + "',";
   request = request.slice(0, -1);
@@ -165,7 +167,8 @@ function updateUserByEmail(req, res, next) {
     request += "user_title='" + req.body.user_title + "',";
   if (req.body.user_description)
     request += "user_description='" + req.body.user_description + "',";
-
+  if (req.body.auto_save_to_calendar != undefined)
+    request += "auto_save_to_calendar=" + (req.body.auto_save_to_calendar ? "true," : "false,");
   if (request != requestInit) {
     request = request.slice(0, -1);
     request += " where email ='" + req.body.email + "'";
