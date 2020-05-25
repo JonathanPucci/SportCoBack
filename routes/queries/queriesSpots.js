@@ -35,10 +35,10 @@ function getSingleSpot(req, res, next) {
 function getSingleSpotByCoordinates(req, res, next) {
   let areaSelected = req.body;
   let area = {
-    latitude_min: (areaSelected.latitude - 0.01).toString(),
-    latitude_max: (areaSelected.latitude + 0.01).toString(),
-    longitude_min: (areaSelected.longitude - 0.01).toString(),
-    longitude_max: (areaSelected.longitude + 0.01).toString(),
+    latitude_min: (parseFloat(areaSelected.latitude) - 0.001).toString(),
+    latitude_max: (parseFloat(areaSelected.latitude) + 0.001).toString(),
+    longitude_min: (parseFloat(areaSelected.longitude) - 0.001).toString(),
+    longitude_max: (parseFloat(areaSelected.longitude) + 0.001).toString(),
   }
   db
     .any("select * from spots WHERE spots.spot_longitude BETWEEN ${longitude_min} AND ${longitude_max} AND spots.spot_latitude BETWEEN ${latitude_min} AND ${latitude_max};", area)

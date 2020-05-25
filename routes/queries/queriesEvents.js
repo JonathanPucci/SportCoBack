@@ -103,6 +103,7 @@ function createEvent(req, res, next) {
 }
 
 function updateEvent(req, res, next) {
+  console.log(req.body)
   db
     .none(
       'update Events set description=${description}, date=${date}, host_id=${host_id}, spot_id=${spot_id}, participants_min=${participants_min}, participants_max=${participants_max}, sport=${sport}, sport_level=${sport_level}, visibility=${visibility} where event_id=${event_id} ',
@@ -138,6 +139,8 @@ function updateEvent(req, res, next) {
         })
     })
     .catch(function (err) {
+      console.log(err)
+
       return next(err);
     });
 }
