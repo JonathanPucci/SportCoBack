@@ -140,6 +140,7 @@ CREATE TABLE Events (
 	Sport sport NOT NULL,
 	sport_level sport_level NOT NULL DEFAULT 'intermediate', 
 	visibility visibility NOT NULL DEFAULT 'public',
+	is_team_event boolean,
 	CONSTRAINT Events_pk PRIMARY KEY (event_id)
 ) WITH (
   OIDS=FALSE
@@ -162,6 +163,7 @@ CREATE TABLE Spots (
 	Spot_name TEXT,
 	Spot_longitude decimal NOT NULL,
 	Spot_latitude decimal NOT NULL,
+	is_official boolean default false,
 	CONSTRAINT Spots_pk PRIMARY KEY (Spot_ID)
 ) WITH (
   OIDS=FALSE

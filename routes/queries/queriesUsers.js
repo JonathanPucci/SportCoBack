@@ -50,6 +50,8 @@ function getSingleUserNotifications(req, res, next) {
 
 function getSingleUserByEmail(req, res, next) {
   var email = req.params.id;
+  console.log(email);
+
   db
     .one('select * from Users where email = $1', email)
     .then(function (data) {
