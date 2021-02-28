@@ -19,6 +19,7 @@ const cn = {
 const config =
   process.env.DATABASE_URL != undefined ? process.env.DATABASE_URL : cn;
 var db = pgp(config);
+console.log(cn)
 console.log(db.connect())
 
 db
