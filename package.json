@@ -57,7 +57,8 @@
     "ts-node": "~3.2.0",
     "tslint": "~5.7.0",
     "typescript": "~2.3.3",
-    "zone.js": "^0.8.14"
+    "zone.js": "^0.8.14",
+    "connection-string": "4.3.2"
   },
   "devDependencies": {
     "codelyzer": "~3.2.0",
