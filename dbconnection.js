@@ -19,6 +19,16 @@ const cn = {
 const config =
   process.env.DATABASE_URL != undefined ? process.env.DATABASE_URL : cn;
 var db = pgp(config);
+console.log(db.connect())
+
+db
+    .any('select * from Users')
+    .then(function (data) {
+      console.log(data)
+    })
+    .catch(function (err) {
+      return next(err);
+    });
 
 module.exports = {
   db: db

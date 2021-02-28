@@ -8,8 +8,7 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 // setup ports
 var server_port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
-var server_ip_address =
-  process.env.IP || process.env.OPENSHIFT_NODEJS_IP || "0.0.0.0";
+var server_ip_address =  process.env.IP || process.env.OPENSHIFT_NODEJS_IP || "0.0.0.0";
 
 const mountRoutes = require("./routes");
 
