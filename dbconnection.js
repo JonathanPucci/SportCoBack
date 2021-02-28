@@ -20,11 +20,11 @@ const cn = {
 // const config =
 //   process.env.DATABASE_URL != undefined ? process.env.DATABASE_URL : cn;
 
-const cnObj = new ConnectionString("postgres://sifsrwtukzmsjn:ef0bad6eff5d7481a7ebde324bd2743bb1c41270368d0ac89b85c69deccfe207@ec2-176-34-97-213.eu-west-1.compute.amazonaws.com:5432/d93n3ksu2f8gha"));
+const cnObj = new ConnectionString("postgres://sifsrwtukzmsjn:ef0bad6eff5d7481a7ebde324bd2743bb1c41270368d0ac89b85c69deccfe207@ec2-176-34-97-213.eu-west-1.compute.amazonaws.com:5432/d93n3ksu2f8gha");
 const config = {
   host: cnObj.hostname,
   port: cnObj.port,
-  database: cnObj.path?.[0],
+  database: cnObj.path[0],
   user: cnObj.user,
   password: cnObj.password,
   ssl: {
