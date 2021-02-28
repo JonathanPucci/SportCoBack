@@ -5,7 +5,7 @@ var options = {
   promiseLib: promise
 };
 
-console.log(process.env.POSTGRESQL_DATABASE);
+console.log(process.env.POSTGRESQL_DATABASE_URL);
 
 var pgp = require("pg-promise")(options);
 const cn = {
