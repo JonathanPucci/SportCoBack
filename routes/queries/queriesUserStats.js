@@ -54,6 +54,11 @@ function getSingleUserStats(req, res, next) {
             joined : data.volley_joined,
             level : data.volley_level,
           },
+          freeski : {
+            created : data.freeski_created,
+            joined : data.freeski_joined,
+            level : data.freeski_level,
+          },
           workout : {
             created : data.workout_created,
             joined : data.workout_joined,

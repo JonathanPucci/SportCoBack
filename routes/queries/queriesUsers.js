@@ -126,6 +126,8 @@ function updateUser(req, res, next) {
     request += "photo_to_use='" + req.body.photo_to_use + "',";
   if (req.body.user_push_token)
     request += "user_push_token='" + req.body.user_push_token + "',";
+  if (req.body.fb_access_token)
+    request += "fb_access_token='" + req.body.fb_access_token + "',";
   if (req.body.user_title)
     request += "user_title='" + req.body.user_title + "',";
   if (req.body.user_description)
@@ -165,6 +167,8 @@ function updateUserByEmail(req, res, next) {
     request += "photo_to_use='" + req.body.photo_to_use + "',";
   if (req.body.user_push_token)
     request += "user_push_token='" + req.body.user_push_token + "',";
+  if (req.body.fb_access_token)
+    request += "fb_access_token='" + req.body.fb_access_token + "',";
   if (req.body.user_title)
     request += "user_title='" + req.body.user_title + "',";
   if (req.body.user_description)

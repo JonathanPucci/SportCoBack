@@ -14,7 +14,7 @@ DROP TABLE Spots CASCADE;
 
 
 
-CREATE TYPE sport AS ENUM ('basket', 'soccer', 'futsal', 'workout', 'running', 'volley', 'beachvolley', 'tennis','vtt','roadbike');
+CREATE TYPE sport AS ENUM ('basket', 'soccer', 'futsal', 'workout', 'running', 'volley', 'beachvolley', 'tennis','vtt','roadbike', 'freeski');
 CREATE TYPE sport_level AS ENUM ('first time', 'beginner', 'intermediate', 'advanced', 'pro');
 CREATE TYPE visibility AS ENUM ('public','private');
 CREATE TYPE photo_code AS ENUM ('default','fb','custom');
@@ -31,6 +31,7 @@ CREATE TABLE Users (
 	Photo_url_s3 VARCHAR(255),
 	photo_to_use photo_code DEFAULT 'default',
 	user_push_token VARCHAR(255) UNIQUE,
+	fb_access_token VARCHAR(400),
 	auto_save_to_calendar boolean default false,
 	CONSTRAINT Users_pk PRIMARY KEY (user_id)
 ) WITH (
@@ -53,6 +54,7 @@ CREATE TABLE UserStats (
 	futsal_joined bigint DEFAULT 0,
 	beachvolley_joined bigint DEFAULT 0,
 	volley_joined bigint DEFAULT 0,
+	freeski_joined bigint DEFAULT 0,
 	workout_joined bigint DEFAULT 0,
 	running_joined bigint DEFAULT 0,	
 	vtt_joined bigint DEFAULT 0,	
@@ -63,6 +65,7 @@ CREATE TABLE UserStats (
 	futsal_created bigint DEFAULT 0,
 	beachvolley_created bigint DEFAULT 0,
 	volley_created bigint DEFAULT 0,
+	freeski_created bigint DEFAULT 0,
 	workout_created bigint DEFAULT 0,
 	running_created bigint DEFAULT 0,	
 	vtt_created bigint DEFAULT 0,	
@@ -73,6 +76,7 @@ CREATE TABLE UserStats (
 	futsal_level sport_level DEFAULT 'intermediate',
 	beachvolley_level sport_level DEFAULT 'intermediate',
 	volley_level sport_level DEFAULT 'intermediate',
+	freeski_level sport_level DEFAULT 'intermediate',
 	workout_level sport_level DEFAULT 'intermediate',
 	running_level sport_level DEFAULT 'intermediate',	
 	vtt_level sport_level DEFAULT 'intermediate',	
