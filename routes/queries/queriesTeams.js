@@ -49,8 +49,8 @@ function getSingleTeam(req, res, next) {
 function createTeam(req, res, next) {
   db
     .any(
-      'insert into Teams( team_id,team_name, team_description, team_manager, team_creation_date, manager_has_to_accept)' +
-      "values( DEFAULT, ${team_name}, ${team_description}, ${team_manager}, ${team_creation_date}, ${manager_has_to_accept}) RETURNING team_id",
+      'insert into Teams( team_id,team_name, team_description, team_manager, team_creation_date, manager_has_to_accept, team_picture)' +
+      "values( DEFAULT, ${team_name}, ${team_description}, ${team_manager}, ${team_creation_date}, ${manager_has_to_accept, ${team_picture}}) RETURNING team_id",
       req.body
     )
     .then(function (data) {
