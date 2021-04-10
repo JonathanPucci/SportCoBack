@@ -71,7 +71,7 @@ function createTeam(req, res, next) {
 function updateTeam(req, res, next) {
   db
     .none(
-      'update Teams set team_name=${team_name}, team_description=${team_description}, team_manager=${team_manager}, manager_has_to_accept=${manager_has_to_accept} where team_id=${team_id} ',
+      'update Teams set team_name=${team_name}, team_description=${team_description}, team_manager=${team_manager}, manager_has_to_accept=${manager_has_to_accept}, team_picture=${team_picture} where team_id=${team_id} ',
       req.body
     )
     .then(function () {
