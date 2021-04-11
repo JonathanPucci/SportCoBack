@@ -108,7 +108,7 @@ CREATE TABLE Teams (
 	team_manager bigint NOT NULL,
 	manager_has_to_accept int NOT NULL,
 	team_creation_date timestamp not null,
-	team_picture TEXT,
+	team_picture VARCHAR(255),
 	CONSTRAINT Teams_pk PRIMARY KEY (team_id)
 ) WITH (
   OIDS=FALSE

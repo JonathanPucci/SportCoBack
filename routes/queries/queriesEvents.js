@@ -134,6 +134,7 @@ function updateEvent(req, res, next) {
                   data_type: req.body.data_name,
                   data_value: req.body.event_id,
                   data_value2: hostPhotoURL,
+                  photo_to_use: hostData.photo_to_use,
                   sender_id: req.body.host_id
                 }
                 let token = data[index].user_push_token;
@@ -166,6 +167,7 @@ function removeEvent(req, res, next) {
                 data_type: event.data_name,
                 data_value: event.event_id,
                 data_value2: hostPhotoURL,
+                photo_to_use : hostData.photo_to_use,
                 sender_id: event.host_id
               }
               let token = data[index].user_push_token;

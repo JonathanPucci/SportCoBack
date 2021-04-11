@@ -82,6 +82,7 @@ function createEventParticipant(req, res, next) {
                   data_type: "event_id",
                   data_value: req.body.event_id,
                   data_value2: participantData.photo_url,
+                  photo_to_use: participantData.photo_to_use,
                   sender_id: req.body.user_id.toString()
                 }
                 let token = participant.user_push_token;
