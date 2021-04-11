@@ -94,6 +94,8 @@ function getSingleUserByEmail(req, res, next) {
 }
 
 function createUser(req, res, next) {
+  if (req.body.photo_to_use == undefined)
+    req.body.photo_to_use = 'default';
   return db
     .one('insert into Users(user_id,user_name,email,photo_url,photo_to_use) values(DEFAULT,${user_name},${email},${photo_url},${photo_to_use}) RETURNING user_id', req.body)
     .then((data) => {
