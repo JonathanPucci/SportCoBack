@@ -19,11 +19,19 @@ function getAllEvents(req, res, next) {
 
 function getAllEventsInArea(req, res, next) {
   let areaSelected = req.body;
+  //Only in view
   let area = {
     latitude_min: (areaSelected.latitude - (areaSelected.latitudeDelta / 2)),
     latitude_max: (areaSelected.latitude + (areaSelected.latitudeDelta / 2)),
     longitude_min: (areaSelected.longitude - (areaSelected.latitudeDelta / 2)),
     longitude_max: (areaSelected.longitude + (areaSelected.latitudeDelta / 2)),
+  }
+  // whole region
+  area = {
+    latitude_min: (areaSelected.latitude - 0.5),
+    latitude_max: (areaSelected.latitude + 0.5),
+    longitude_min: (areaSelected.longitude - 1),
+    longitude_max: (areaSelected.longitude + 1),
   }
   let nowminus5 = new Date() ;
   nowminus5.setDate(nowminus5.getDate()-5);
